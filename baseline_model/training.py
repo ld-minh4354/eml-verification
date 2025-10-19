@@ -13,8 +13,10 @@ import matplotlib.pyplot as plt
 
 
 class TrainBaselineResNet:
-    def __init__(self, seed = 10):
+    def __init__(self, dataset = "CIFAR10", seed = 10):
         self.add_project_folder_to_pythonpath()
+        self.dataset = dataset
+        self.seed = seed
         self.set_seed(seed)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -37,8 +39,8 @@ class TrainBaselineResNet:
         self.training()
 
 
-    def load_data(self, dataset = "CIFAR10"):
-        if dataset == "CIFAR10":
+    def load_data(self):
+        if self.dataset == "CIFAR10":
             train_dataset = datasets.CIFAR10(
                 root = os.path.join("data", "raw"),
                 train = True,
@@ -70,8 +72,6 @@ class TrainBaselineResNet:
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-        print("Finish loading data.\n")
-
 
     def set_hyperparameters(self):
         self.EPOCH = 10
@@ -89,13 +89,15 @@ class TrainBaselineResNet:
 
         train_losses = []
 
-        print("Finish training preparation.\n")
+        print(f"Start training ResNet18 for {self.dataset} under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             train_loss = self.train_loop(epoch)
             train_losses.append(train_loss)
 
         self.test_loop()
+
+        torch.save(self.model.state_dict(), os.path.join("data", "model", f"resnet18-{self.dataset}-{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
