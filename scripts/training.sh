@@ -6,6 +6,7 @@
 #SBATCH --mail-type=ALL
 
 module load python
+source .venv/bin/activate
 
 SEED=${1:-10}  # Default to 10 if not provided
 srun python baseline_model/training.py --seed $SEED
