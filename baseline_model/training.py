@@ -1,6 +1,8 @@
 import os, sys
+import argparse
 import random
 
+import pandas as pd
 import numpy as np
 
 import torch
@@ -31,6 +33,9 @@ class TrainBaselineResNet:
         torch.manual_seed(seed)
         random.seed(seed)
         np.random.seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
 
 
     def main(self):
@@ -41,31 +46,27 @@ class TrainBaselineResNet:
 
     def load_data(self):
         if self.dataset == "CIFAR10":
-            train_dataset = datasets.CIFAR10(
-                root = os.path.join("data", "raw"),
-                train = True,
-                download = True,
-                transform = transforms.Compose([
-                    transforms.ToTensor(),
-                    transforms.Normalize(
-                        mean = [0.4914, 0.4822, 0.4465],
-                        std = [0.2023, 0.1994, 0.2010]
-                    )
-                ])
-            )
+            self.num_classes = 10
+            transform_train = transforms.Compose([
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.4914, 0.4822, 0.4465],
+                    std=[0.2023, 0.1994, 0.2010]
+                )
+            ])
 
-            test_dataset = datasets.CIFAR10(
-                root = os.path.join("data", "raw"),
-                train = False,
-                download = True,
-                transform = transforms.Compose([
-                    transforms.ToTensor(),
-                    transforms.Normalize(
-                        mean = [0.4914, 0.4822, 0.4465],
-                        std = [0.2023, 0.1994, 0.2010]
-                    )
-                ])
-            )
+            transform_test = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.4914, 0.4822, 0.4465],
+                    std=[0.2023, 0.1994, 0.2010]
+                )
+            ])
+
+            train_dataset = datasets.CIFAR10(root = os.path.join("data", "raw"), train = True, download = True, transform = transform_train)
+            test_dataset = datasets.CIFAR10(root = os.path.join("data", "raw"), train = False, download = True, transform = transform_test)
         else:
             raise Exception("Not implemented yet.")
 
@@ -74,29 +75,33 @@ class TrainBaselineResNet:
 
 
     def set_hyperparameters(self):
-        self.EPOCH = 10
-        self.LR = 0.001
+        self.EPOCH = 100
+        self.LR = 1e-3
+        self.WEIGHT_DECAY = 1e-4
+        self.STEP_SIZE = 30
+        self.GAMMA = 0.1
 
 
     def training(self):
-        self.model = models.resnet18().to(self.device)
+        self.model = models.resnet18()
         self.model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.model.maxpool = nn.Identity()
+        self.model.fc = nn.Linear(512, self.num_classes)
+        self.model = self.model.to(self.device)
 
+        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=self.STEP_SIZE, gamma=self.GAMMA)
 
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.LR)
         self.criterion = nn.CrossEntropyLoss()
-
-        train_losses = []
 
         print(f"Start training ResNet18 for {self.dataset} under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
-            train_loss = self.train_loop(epoch)
-            train_losses.append(train_loss)
+            test_accuracy = self.train_loop(epoch)
+            if test_accuracy >= 0.9:
+                break
 
-        self.test_loop()
-
+        os.makedirs(os.path.join("data", "model"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("data", "model", f"resnet18-{self.dataset}-{self.seed}.pth"))
 
 
@@ -117,9 +122,12 @@ class TrainBaselineResNet:
             self.optimizer.step()
 
         total_loss = total_loss / len(self.train_loader)
-        print(f"Epoch [{epoch+1:3d}] | Train Loss: {total_loss:.4f}")
+        test_loss, test_accuracy = self.test_loop()
 
-        return total_loss
+        self.scheduler.step()
+        print(f"Epoch [{epoch+1:3d}] | Train Loss: {total_loss:.4f} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_accuracy:.4f}")
+
+        return test_accuracy
     
 
     def test_loop(self):
@@ -141,12 +149,16 @@ class TrainBaselineResNet:
         loss = loss / len(self.test_loader)
         accuracy = accuracy / len(self.test_loader.dataset)
 
-        print(f"Final Test Loss: {loss}")
-        print(f"Final Test Accuracy: {accuracy}")
+        return loss, accuracy
 
 
 
 if __name__ == "__main__":
-    training = TrainBaselineResNet(seed = 10)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seed", type=int, default=10, help="Random seed for training")
+    args = parser.parse_args()
+
+    training = TrainBaselineResNet(seed=args.seed)
     training.main()
+
         
