@@ -65,8 +65,9 @@ class TrainBaselineResNet:
                 )
             ])
 
-            train_dataset = datasets.CIFAR10(root = os.path.join("data", "raw"), train = True, download = True, transform = transform_train)
-            test_dataset = datasets.CIFAR10(root = os.path.join("data", "raw"), train = False, download = True, transform = transform_test)
+            os.makedirs("raw_datasets", exist_ok=True)
+            train_dataset = datasets.CIFAR10(root = "raw_datasets", train = True, download = True, transform = transform_train)
+            test_dataset = datasets.CIFAR10(root = "raw_datasets", train = False, download = True, transform = transform_test)
         else:
             raise Exception("Not implemented yet.")
 
@@ -101,8 +102,8 @@ class TrainBaselineResNet:
             if test_accuracy >= 0.9:
                 break
 
-        os.makedirs(os.path.join("data", "model"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("data", "model", f"resnet18-{self.dataset}-{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "baseline"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "baseline", f"resnet18-{self.dataset}-{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
@@ -160,5 +161,3 @@ if __name__ == "__main__":
 
     training = TrainBaselineResNet(seed=args.seed)
     training.main()
-
-        
