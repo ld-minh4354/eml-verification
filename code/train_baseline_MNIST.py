@@ -85,11 +85,11 @@ class TrainBaselineMNIST:
 
         for epoch in range(self.EPOCH):
             test_accuracy = self.train_loop(epoch)
-            if test_accuracy >= 0.9:
+            if test_accuracy >= 0.99:
                 break
 
-        os.makedirs(os.path.join("models", "baseline"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "baseline", f"resnet18-MNIST-{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "MNIST", "baseline"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.pth"))
 
 
     def train_loop(self, epoch):

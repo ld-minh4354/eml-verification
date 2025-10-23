@@ -51,7 +51,19 @@ class GenerateInput:
             ])
 
             os.makedirs("raw_datasets", exist_ok=True)
-            self.test_dataset = datasets.CIFAR10(root = "raw_datasets", train = False, download = True, transform = transform_test)
+            self.test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=True, transform=transform_test)
+
+        elif self.dataset == "MNIST":
+            self.num_classes = 10
+
+            transform_test = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.1307,), (0.3081,))
+            ])
+
+            os.makedirs("raw_datasets", exist_ok=True)
+            self.test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=True, transform=transform_test)
+
         else:
             raise Exception("Not implemented yet.")
         
@@ -78,5 +90,5 @@ class GenerateInput:
 
 
 if __name__ == "__main__":
-    gt = GenerateInput()
+    gt = GenerateInput(dataset="MNIST")
     gt.main()

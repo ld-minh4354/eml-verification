@@ -63,8 +63,8 @@ class TrainBaselineCIFAR10:
         ])
 
         os.makedirs("raw_datasets", exist_ok=True)
-        train_dataset = datasets.CIFAR10(root = "raw_datasets", train = True, download = True, transform = transform_train)
-        test_dataset = datasets.CIFAR10(root = "raw_datasets", train = False, download = True, transform = transform_test)
+        train_dataset = datasets.CIFAR10(root="raw_datasets", train= True, download=True, transform=transform_train)
+        test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=True, transform=transform_test)
 
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -97,8 +97,8 @@ class TrainBaselineCIFAR10:
             if test_accuracy >= 0.9:
                 break
 
-        os.makedirs(os.path.join("models", "baseline"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "CIFAR10", "baseline"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
