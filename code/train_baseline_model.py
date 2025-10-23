@@ -10,8 +10,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 
-import matplotlib.pyplot as plt
-
 
 
 class TrainBaselineResNet:

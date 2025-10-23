@@ -1,16 +1,11 @@
 import os, sys
-import argparse
 import random
 
 import pandas as pd
 import numpy as np
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torchvision import datasets, transforms, models
-
-import matplotlib.pyplot as plt
+from torchvision import datasets, transforms
 
 
 
@@ -69,17 +64,17 @@ class GenerateInput:
     
     def create_input(self):
         df = pd.DataFrame(columns=["index", "label"])
-        os.makedirs(os.path.join("test_data", "inputs"), exist_ok=True)
+        os.makedirs(os.path.join("test_data", self.dataset, "inputs"), exist_ok=True)
 
         for i in range(100):
             image, label = self.test_dataset[self.indices[i]]
 
             image_np = image.numpy()
-            np.save(os.path.join("test_data", "inputs", f"input_{i}.npy"), image_np)
+            np.save(os.path.join("test_data", self.dataset, "inputs", f"input_{i}.npy"), image_np)
 
             df.loc[len(df)] = [i, label]
         
-        df.to_csv(os.path.join("test_data", "labels.csv"), index=False)
+        df.to_csv(os.path.join("test_data", self.dataset, "labels.csv"), index=False)
 
 
 if __name__ == "__main__":
