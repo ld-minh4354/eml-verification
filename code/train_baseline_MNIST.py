@@ -2,20 +2,17 @@ import os, sys
 import argparse
 import random
 
-import pandas as pd
 import numpy as np
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 
 
 
-class TrainBaselineResNet:
-    def __init__(self, dataset = "CIFAR10", seed = 10):
+class TrainBaselineMNIST:
+    def __init__(self, seed = 10):
         self.add_project_folder_to_pythonpath()
-        self.dataset = dataset
         self.seed = seed
         self.set_seed(seed)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -43,31 +40,22 @@ class TrainBaselineResNet:
 
 
     def load_data(self):
-        if self.dataset == "CIFAR10":
-            self.num_classes = 10
-            transform_train = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.4914, 0.4822, 0.4465],
-                    std=[0.2023, 0.1994, 0.2010]
-                )
-            ])
+        self.num_classes = 10
 
-            transform_test = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.4914, 0.4822, 0.4465],
-                    std=[0.2023, 0.1994, 0.2010]
-                )
-            ])
+        transform_train = transforms.Compose([
+            transforms.RandomRotation(10),
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,))
+        ])
 
-            os.makedirs("raw_datasets", exist_ok=True)
-            train_dataset = datasets.CIFAR10(root = "raw_datasets", train = True, download = True, transform = transform_train)
-            test_dataset = datasets.CIFAR10(root = "raw_datasets", train = False, download = True, transform = transform_test)
-        else:
-            raise Exception("Not implemented yet.")
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,))
+        ])
+
+        os.makedirs("raw_datasets", exist_ok=True)
+        train_dataset = datasets.MNIST(root="raw_datasets", train=True, download=True, transform=transform_train)
+        test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=True, transform=transform_test)
 
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -83,7 +71,7 @@ class TrainBaselineResNet:
 
     def training(self):
         self.model = models.resnet18()
-        self.model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.model.maxpool = nn.Identity()
         self.model.fc = nn.Linear(512, self.num_classes)
         self.model = self.model.to(self.device)
@@ -93,7 +81,7 @@ class TrainBaselineResNet:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training ResNet18 for {self.dataset} under seed {self.seed}\n")
+        print(f"Start training ResNet18 for MNIST under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             test_accuracy = self.train_loop(epoch)
@@ -101,7 +89,7 @@ class TrainBaselineResNet:
                 break
 
         os.makedirs(os.path.join("models", "baseline"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "baseline", f"resnet18-{self.dataset}-{self.seed}.pth"))
+        torch.save(self.model.state_dict(), os.path.join("models", "baseline", f"resnet18-MNIST-{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
@@ -157,5 +145,5 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=10, help="Random seed for training")
     args = parser.parse_args()
 
-    training = TrainBaselineResNet(seed=args.seed)
+    training = TrainBaselineMNIST(seed=args.seed)
     training.main()
