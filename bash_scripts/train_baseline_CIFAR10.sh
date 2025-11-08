@@ -8,7 +8,7 @@
 #SBATCH --output=logs/train_baseline_CIFAR10_%a.out
 #SBATCH --error=logs/train_baseline_CIFAR10_%a.err
 
-module load python
+module load python/3.9
 source .venv/bin/activate
 
 SEED=$(( SLURM_ARRAY_TASK_ID * 10 ))
