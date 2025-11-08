@@ -166,7 +166,8 @@ class PruneMNIST:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=10, help="Random seed for training")
+    parser.add_argument("--prune", type=int, default=10, help="Prune percentage")
     args = parser.parse_args()
 
-    training = PruneMNIST(seed=args.seed, prune_rate=0.1)
+    training = PruneMNIST(seed=args.seed, prune_rate=args.prune / 100)
     training.main()

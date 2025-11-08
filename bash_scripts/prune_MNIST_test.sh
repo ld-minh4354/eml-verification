@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:30:00
-#SBATCH --array=0-49
+#SBATCH --array=0-0
 #SBATCH --output=logs/prune_MNIST_%a.out
 #SBATCH --error=logs/prune_MNIST_%a.err
 
