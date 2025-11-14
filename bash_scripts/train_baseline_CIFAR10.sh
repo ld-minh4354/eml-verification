@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=00:10:00
+#SBATCH --time=00:20:00
 #SBATCH --array=1-10
 #SBATCH --output=logs/train_baseline_CIFAR10_%a.out
 #SBATCH --error=logs/train_baseline_CIFAR10_%a.err
