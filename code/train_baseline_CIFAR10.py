@@ -100,6 +100,10 @@ class TrainBaselineCIFAR10:
         os.makedirs(os.path.join("models", "CIFAR10", "baseline"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"))
 
+        x = torch.randn(1, 3, 32, 32).to(self.device)
+        torch.onnx.export(self.model, x, os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.onnx"), export_params=True,
+                          input_names=['input'], output_names=['output'], dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}})
+
 
     def train_loop(self, epoch):
         self.model.train()
