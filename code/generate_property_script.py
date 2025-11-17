@@ -6,10 +6,9 @@ import pandas as pd
 
 
 class GeneratePropertyScripts:
-    def __init__(self, dataset = "CIFAR10", epsilon = 0.005):
+    def __init__(self, dataset = "CIFAR10"):
         self.add_project_folder_to_pythonpath()
         self.dataset = dataset
-        self.epsilon = epsilon
 
 
     def add_project_folder_to_pythonpath(self):
@@ -28,13 +27,13 @@ class GeneratePropertyScripts:
 
 
     def generate_scripts(self):
-        os.makedirs(os.path.join("properties", self.dataset, f"eps-{self.epsilon}"), exist_ok=True)
+        os.makedirs(os.path.join("properties", self.dataset), exist_ok=True)
 
         for _, row in self.df_labels.iterrows():
             index = row["index"]
             label = row["label"]
 
-            file_path = os.path.join("properties", self.dataset, f"eps-{self.epsilon}", f"property_{index}.py")
+            file_path = os.path.join("properties", self.dataset, f"property_{index}.py")
             file_content = self.get_file_content(index, label)
 
             with open(file_path, "w") as f:
@@ -54,7 +53,7 @@ class GeneratePropertyScripts:
             N = Network("N")
             x = Image(os.path.join("test_data", "{self.dataset}", "inputs", "input_{index}.npy"))
 
-            epsilon = Parameter("epsilon", type=float, default={self.epsilon})
+            epsilon = Parameter("epsilon", type=float)
             true_class = {label}
 
             Forall(
@@ -69,5 +68,5 @@ class GeneratePropertyScripts:
 
 
 if __name__ == "__main__":
-    gps = GeneratePropertyScripts()
+    gps = GeneratePropertyScripts(dataset="MNIST")
     gps.main()
