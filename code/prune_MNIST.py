@@ -57,8 +57,8 @@ class PruneMNIST:
         ])
 
         os.makedirs("raw_datasets", exist_ok=True)
-        train_dataset = datasets.MNIST(root="raw_datasets", train=True, download=True, transform=transform_train)
-        test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=True, transform=transform_test)
+        train_dataset = datasets.MNIST(root="raw_datasets", train=True, download=False, transform=transform_train)
+        test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=False, transform=transform_test)
 
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
