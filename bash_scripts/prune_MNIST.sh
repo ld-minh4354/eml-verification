@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:30:00
-#SBATCH --array=0-49
+#SBATCH --array=0-59
 #SBATCH --output=logs/prune_MNIST_%a.out
 #SBATCH --error=logs/prune_MNIST_%a.err
 
@@ -12,7 +12,7 @@ module load python/3.9
 source .venv/bin/activate
 
 SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
-PRUNE_VALUES=(10 20 30 40 50)
+PRUNE_VALUES=(10 20 30 40 50 60)
 
 # Compute i, j indices from SLURM_ARRAY_TASK_ID
 NUM_J=${#PRUNE_VALUES[@]}
