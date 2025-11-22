@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=00:20:00
+#SBATCH --time=1:00:00
 #SBATCH --array=1-10
 #SBATCH --output=logs/model_stats.out
 #SBATCH --error=logs/model_stats.err
