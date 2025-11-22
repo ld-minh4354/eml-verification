@@ -15,4 +15,5 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_main.txt
 
+srun python code/model_stats_MNIST.py
 srun python code/model_stats_CIFAR10.py
