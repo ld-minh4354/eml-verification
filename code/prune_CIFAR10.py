@@ -6,15 +6,17 @@ import numpy as np
 
 import torch
 import torch.nn as nn
+from torch.nn.utils import prune
 from torchvision import datasets, transforms, models
 
 
 
-class TrainBaselineMNIST:
-    def __init__(self, seed = 10):
+class PruneCIFAR10:
+    def __init__(self, seed = 10, prune_rate = 0.1):
         self.add_project_folder_to_pythonpath()
         self.seed = seed
         self.set_seed(seed)
+        self.prune_rate = prune_rate
         self.device = torch.device("cuda")
 
 
@@ -35,6 +37,7 @@ class TrainBaselineMNIST:
 
     def main(self):
         self.load_data()
+        self.load_model()
         self.set_hyperparameters()
         self.training()
 
@@ -43,22 +46,52 @@ class TrainBaselineMNIST:
         self.num_classes = 10
 
         transform_train = transforms.Compose([
-            transforms.RandomRotation(10),
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
+            transforms.Normalize(
+                mean=[0.4914, 0.4822, 0.4465],
+                std=[0.2023, 0.1994, 0.2010]
+            )
         ])
 
         transform_test = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
+            transforms.Normalize(
+                mean=[0.4914, 0.4822, 0.4465],
+                std=[0.2023, 0.1994, 0.2010]
+            )
         ])
 
         os.makedirs("raw_datasets", exist_ok=True)
-        train_dataset = datasets.MNIST(root="raw_datasets", train=True, download=False, transform=transform_train)
-        test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=False, transform=transform_test)
+        train_dataset = datasets.CIFAR10(root="raw_datasets", train=True, download=False, transform=transform_train)
+        test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=False, transform=transform_test)
 
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
+
+    
+    def load_model(self):
+        self.model = models.resnet18()
+        self.model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.model.maxpool = nn.Identity()
+        self.model.fc = nn.Linear(512, self.num_classes)
+        self.model = self.model.to(self.device)
+
+        state_dict = torch.load(os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"), 
+                                map_location=self.device)
+        self.model.load_state_dict(state_dict)
+
+        self.parameters_to_prune = []
+        for _, module in self.model.named_modules():
+            if isinstance(module, nn.Conv2d):
+                self.parameters_to_prune.append((module, 'weight'))
+
+        prune.global_unstructured(
+            self.parameters_to_prune,
+            pruning_method=prune.L1Unstructured,
+            amount=self.prune_rate,
+        )
 
 
     def set_hyperparameters(self):
@@ -70,29 +103,26 @@ class TrainBaselineMNIST:
 
 
     def training(self):
-        self.model = models.resnet18()
-        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        self.model.maxpool = nn.Identity()
-        self.model.fc = nn.Linear(512, self.num_classes)
-        self.model = self.model.to(self.device)
-
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=self.STEP_SIZE, gamma=self.GAMMA)
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training ResNet18 for MNIST under seed {self.seed}\n")
+        print(f"Start training ResNet18 for CIFAR10 under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             test_accuracy = self.train_loop(epoch)
-            if test_accuracy >= 0.99:
+            if test_accuracy >= 0.9:
                 break
 
-        os.makedirs(os.path.join("models", "MNIST", "baseline"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.pth"))
+        for module, _ in self.parameters_to_prune:
+            prune.remove(module, 'weight')
 
-        x = torch.randn(1, 1, 28, 28).to(self.device)
-        torch.onnx.export(self.model, x, os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.onnx"),
+        os.makedirs(os.path.join("models", "CIFAR10", f"prune_{self.prune_rate}"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "CIFAR10", f"prune_{self.prune_rate}", f"resnet18-CIFAR10-{self.seed}.pth"))
+
+        x = torch.randn(1, 3, 28, 28).to(self.device)
+        torch.onnx.export(self.model, x, os.path.join("models", "CIFAR10", f"prune_{self.prune_rate}", f"resnet18-CIFAR10-{self.seed}.onnx"),
                           export_params=True, external_data=False,
                           input_names=['input'], output_names=['output'],
                           dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}})
@@ -149,7 +179,8 @@ class TrainBaselineMNIST:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=10, help="Random seed for training")
+    parser.add_argument("--prune", type=int, default=10, help="Prune percentage")
     args = parser.parse_args()
 
-    training = TrainBaselineMNIST(seed=args.seed)
+    training = PruneCIFAR10(seed=args.seed, prune_rate=args.prune / 100)
     training.main()

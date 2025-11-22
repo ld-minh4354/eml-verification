@@ -17,7 +17,7 @@ class TrainBaselineCIFAR10:
         self.add_project_folder_to_pythonpath()
         self.seed = seed
         self.set_seed(seed)
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda")
 
 
     def add_project_folder_to_pythonpath(self):
@@ -63,7 +63,7 @@ class TrainBaselineCIFAR10:
         ])
 
         os.makedirs("raw_datasets", exist_ok=True)
-        train_dataset = datasets.CIFAR10(root="raw_datasets", train= True, download=False, transform=transform_train)
+        train_dataset = datasets.CIFAR10(root="raw_datasets", train=True, download=False, transform=transform_train)
         test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=False, transform=transform_test)
 
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
