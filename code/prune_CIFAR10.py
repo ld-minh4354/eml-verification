@@ -182,5 +182,5 @@ if __name__ == "__main__":
     parser.add_argument("--prune", type=int, default=10, help="Prune percentage")
     args = parser.parse_args()
 
-    training = PruneCIFAR10(seed=args.seed, prune_rate=args.prune / 100)
-    training.main()
+    pruning = PruneCIFAR10(seed=args.seed, prune_rate=args.prune / 100)
+    pruning.main()

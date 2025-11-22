@@ -1,0 +1,115 @@
+import os, sys
+
+import pandas as pd
+import numpy as np
+
+import torch
+import torch.nn as nn
+from torchvision import datasets, transforms, models
+
+
+
+class ModelStatsCIFAR10:
+    def __init__(self):
+        self.add_project_folder_to_pythonpath()
+        self.device = torch.device("cuda")
+
+        self.model_type = ["baseline", "prune_0.2", "prune_0.4", "prune_0.6"]
+        self.seed = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+        self.df = pd.DataFrame(columns=["model_type", "seed", "accuracy", "zero_weight_percentage"])
+
+
+    def add_project_folder_to_pythonpath(self):
+        project_path = os.path.abspath("")
+        if project_path not in sys.path:
+            sys.path.append(project_path)
+
+
+    def main(self):
+        self.load_data()
+        self.process_models()
+
+        os.makedirs("results", exist_ok=True)
+        self.df.to_csv(os.path.join("results", "model_stats_CIFAR10.csv"), index=False)
+
+
+    def load_data(self):
+        self.num_classes = 10
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.4914, 0.4822, 0.4465],
+                std=[0.2023, 0.1994, 0.2010]
+            )
+        ])
+
+        os.makedirs("raw_datasets", exist_ok=True)
+        test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=False, transform=transform_test)
+        self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
+
+
+    def process_models(self):
+        for model_type in self.model_type:
+            for seed in self.seed:
+                model = self.load_model(model_type, seed)
+                accuracy = self.test_loop(model)
+                percentage = self.zero_weights_percentage(model)
+
+                self.df.loc[len(self.df)] = {
+                    "model_type": model_type,
+                    "seed": seed,
+                    "accuracy": accuracy,
+                    "zero_weight_percentage": percentage,
+                }
+
+
+    def load_model(self, model_type, seed):
+        model = models.resnet18()
+        model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        model.maxpool = nn.Identity()
+        model.fc = nn.Linear(512, self.num_classes)
+        model = model.to(self.device)
+
+        state_dict = torch.load(os.path.join("models", "CIFAR10", model_type, f"resnet18-CIFAR10-{seed}.pth"), 
+                                map_location=self.device)
+        model.load_state_dict(state_dict)
+
+        return model
+    
+
+    def test_loop(self, model):
+        model.eval()
+
+        accuracy = 0
+
+        with torch.no_grad():
+            for inputs, targets in self.test_loader:
+                inputs, targets = inputs.to(self.device), targets.to(self.device)
+                outputs = model(inputs)
+
+                pred = outputs.argmax(dim=1, keepdim=True)
+                accuracy += pred.eq(targets.view_as(pred)).sum().item()
+
+        accuracy = accuracy / len(self.test_loader.dataset)
+
+        return accuracy
+    
+
+    def zero_weights_percentage(self, model):
+        nonzero = 0
+        total = 0
+        for _, param in model.named_parameters():
+            tensor = param.data
+            nz = torch.count_nonzero(tensor).item()
+            nonzero += nz
+            total += tensor.numel()
+
+        return (1 - nonzero / total) * 100
+
+
+
+if __name__ == "__main__":
+    stats = ModelStatsCIFAR10()
+    stats.main()
