@@ -20,5 +20,5 @@ dnnv_manage install eran
 X=$(( SLURM_ARRAY_TASK_ID ))
 
 dnnv --eran --prop.epsolon 0.01 \
-    --network N models/MNIST/baseline/resnet18-MNIST-10.pth \
+    --network N models/MNIST/baseline/resnet18-MNIST-10.onnx \
     properties/MNIST/property_${X}.py
