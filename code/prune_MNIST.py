@@ -42,6 +42,18 @@ class PruneMNIST:
         self.training()
 
 
+    def count_zero_weights(self):
+        nonzero = 0
+        total = 0
+        for _, param in self.model.named_parameters():
+            tensor = param.data
+            nz = torch.count_nonzero(tensor)
+            nonzero += nz
+            total += tensor.numel()
+
+        print(f"Non-zero weights: {nonzero}/{total}")
+
+
     def load_data(self):
         self.num_classes = 10
 
@@ -74,6 +86,8 @@ class PruneMNIST:
         state_dict = torch.load(os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.pth"), 
                                 map_location=self.device)
         self.model.load_state_dict(state_dict)
+
+        self.count_zero_weights()
 
         self.parameters_to_prune = []
         for _, module in self.model.named_modules():
@@ -110,6 +124,8 @@ class PruneMNIST:
 
         for module, _ in self.parameters_to_prune:
             prune.remove(module, 'weight')
+
+        self.count_zero_weights()
 
         os.makedirs(os.path.join("models", "MNIST", f"prune_{self.prune_rate}"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet18-MNIST-{self.seed}.pth"))
