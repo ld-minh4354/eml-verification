@@ -20,6 +20,6 @@ dnnv_manage install nnenum
 X=$(( SLURM_ARRAY_TASK_ID ))
 
 dnnv --nnenum \
-    --prop.epsilon 0.01 \
+    --prop.epsilon=0.01 \
     --network N models/MNIST/baseline/resnet18-MNIST-10.onnx \
     properties/MNIST/property_${X}.py
