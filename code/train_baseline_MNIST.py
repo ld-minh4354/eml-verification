@@ -95,7 +95,8 @@ class TrainBaselineMNIST:
         torch.onnx.export(self.model, x, os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.onnx"),
                           export_params=True, external_data=False,
                           input_names=['input'], output_names=['output'],
-                          dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}})
+                          dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}},
+                          opset_version=13)
 
 
     def train_loop(self, epoch):
