@@ -3,8 +3,8 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=0:10:00
-#SBATCH --output=logs/dnnv_reluplex.out
-#SBATCH --error=logs/dnnv_reluplex.err
+#SBATCH --output=logs/test_model.out
+#SBATCH --error=logs/test_model.err
 
 module load StdEnv/2020
 module load python/3.9
