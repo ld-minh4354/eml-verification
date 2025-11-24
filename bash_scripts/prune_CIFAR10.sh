@@ -6,7 +6,6 @@
 #SBATCH --time=1:00:00
 #SBATCH --array=0-29
 #SBATCH --output=logs/prune_CIFAR10_%a.out
-#SBATCH --error=logs/prune_CIFAR10_%a.err
 
 module load StdEnv/2023
 module load python/3.11
@@ -16,16 +15,16 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_main.txt
 
-SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
 PRUNE_VALUES=(20 40 60)
+SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
 
-NUM_J=${#PRUNE_VALUES[@]}
-seed_index=$(( SLURM_ARRAY_TASK_ID / NUM_J ))
-prune_index=$(( SLURM_ARRAY_TASK_ID % NUM_J ))
+NUM_J=${#SEED_VALUES[@]}
+prune_index=$(( SLURM_ARRAY_TASK_ID / NUM_J ))
+seed_index=$(( SLURM_ARRAY_TASK_ID % NUM_J ))
 
-seed=${SEED_VALUES[$seed_index]}
 prune=${PRUNE_VALUES[$prune_index]}
+seed=${SEED_VALUES[$seed_index]}
 
-echo "Prune CIFAR10 with seed=$seed, prune=$prune"
+echo "Prune model for CIFAR10 with seed=$seed, prune ratio=$prune %"
 
 srun python code/prune_CIFAR10.py --seed $seed --prune $prune

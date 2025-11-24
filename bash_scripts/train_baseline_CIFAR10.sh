@@ -6,7 +6,6 @@
 #SBATCH --time=00:20:00
 #SBATCH --array=1-10
 #SBATCH --output=logs/train_baseline_CIFAR10_%a.out
-#SBATCH --error=logs/train_baseline_CIFAR10_%a.err
 
 module load StdEnv/2023
 module load python/3.11
@@ -17,5 +16,7 @@ pip install --no-index --upgrade pip
 pip install --no-index -r $HOME/requirements_main.txt
 
 SEED=$(( SLURM_ARRAY_TASK_ID * 10 ))
+
+echo "Train baseline model for CIFAR10 with seed=$SEED"
 
 srun python code/train_baseline_CIFAR10.py --seed $SEED
