@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:20:00
-#SBATCH --array=1-10
+#SBATCH --array=1-1
 #SBATCH --output=logs/train_baseline_MNIST_%a.out
 #SBATCH --error=logs/train_baseline_MNIST_%a.err
 
