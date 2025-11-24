@@ -5,7 +5,7 @@
 #SBATCH --mem=3G
 #SBATCH --time=00:20:00
 #SBATCH --array=1-10
-#SBATCH --output=logs/train_baseline_CIFAR10_%a.out
+#SBATCH --output=logs_training/train_baseline_CIFAR10_%a.out
 
 module load StdEnv/2023
 module load python/3.11

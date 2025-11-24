@@ -5,7 +5,7 @@
 #SBATCH --mem=3G
 #SBATCH --time=1:00:00
 #SBATCH --array=0-29
-#SBATCH --output=logs/prune_CIFAR10_%a.out
+#SBATCH --output=logs_training/prune_CIFAR10_%a.out
 
 module load StdEnv/2023
 module load python/3.11
