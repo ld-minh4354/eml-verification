@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
 #SBATCH --array=0-1
-#SBATCH --output=logs_verification/dnnv_$A_$a.out
+#SBATCH --output=logs_verification/dnnv_%A_%a.out
 
 module load StdEnv/2020
 module load python/3.9
