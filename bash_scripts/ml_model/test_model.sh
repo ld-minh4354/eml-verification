@@ -13,4 +13,4 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_dnnv.txt
 
-srun python code/test_model.py
+srun python code/ml_model/test_model.py

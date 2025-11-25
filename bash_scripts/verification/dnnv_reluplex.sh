@@ -3,7 +3,7 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
-#SBATCH --array=0-4
+#SBATCH --array=0-7999%500
 #SBATCH --output=logs_verification/dnnv_%A_%a.out
 
 module load StdEnv/2020
