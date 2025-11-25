@@ -2,7 +2,7 @@
 #SBATCH --job-name=raw_result
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=0:10:00
+#SBATCH --time=0:15:00
 #SBATCH --output=logs/raw_result.out
 
 module load StdEnv/2023
@@ -13,6 +13,6 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_main.txt
 
-echo "Determining raw results"
+echo "Processing raw results"
 
 srun python code/result_processing/raw_result.py

@@ -45,21 +45,20 @@ class RawResult:
 
     def process_file(self, file_name, content):
         self.error = False
-        dataset = self.regex_helper(content, "DATASET")
-        model_type = self.regex_helper(content, "MODEL TYPE")
-        seed = self.regex_helper(content, "SEED")
-        prop = self.regex_helper(content, "PROPERTY NO")
-        verifier = self.regex_helper(content, "VERIFIER")
-        epsilon = self.regex_helper(content, "EPSILON")
+        dataset = self.regex_helper(file_name, content, "DATASET")
+        model_type = self.regex_helper(file_name, content, "MODEL TYPE")
+        seed = self.regex_helper(file_name, content, "SEED")
+        prop = self.regex_helper(file_name, content, "PROPERTY NO")
+        verifier = self.regex_helper(file_name, content, "VERIFIER")
+        epsilon = self.regex_helper(file_name, content, "EPSILON")
 
         if "result: unsat" in content:
             result = 1
-        else:
+        elif "result: sat" in content:
             result = 0
-
-        if self.error:
-            print(f"Error processing {file_name}")
-            return
+        else:
+            result = None
+            print(f"Error processing RESULT in {file_name}")
 
         self.df.loc[len(self.df)] = {
                     "file_name": file_name,
@@ -73,14 +72,14 @@ class RawResult:
                 }
 
 
-    def regex_helper(self, content, header):
+    def regex_helper(self, file_name, content, header):
         pattern = rf"{header}:\s*(\S+)"
         match = re.search(pattern, content)
         if match:
             result = match.group(1)
             return result
         else:
-            self.error = True
+            print(f"Error processing {header} in {file_name}")
             return None
 
 
