@@ -2,7 +2,7 @@
 #SBATCH --job-name=raw_result
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=1:00:00
+#SBATCH --time=0:10:00
 #SBATCH --output=logs/raw_result.out
 
 module load StdEnv/2023
