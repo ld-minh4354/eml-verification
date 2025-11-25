@@ -3,7 +3,7 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
-#SBATCH --array=0-1
+#SBATCH --array=0-4
 #SBATCH --output=logs_verification/dnnv_%A_%a.out
 
 module load StdEnv/2020
@@ -18,16 +18,33 @@ dnnv_manage install reluplex
 
 X=$(( SLURM_ARRAY_TASK_ID ))
 
-DATASET=("MNIST" "CIFAR10")
-dataset=${DATASET[$X]}
+DATASET_VALUES=("MNIST" "CIFAR10")
+MODEL_TYPE_VALUES=("baseline" "prune_0.2" "prune_0.4" "prune_0.6")
+SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
+PROPERTY_VALUES=($(seq 0 99))
 
-echo "DATASET: ${dataset}"
-echo "MODEL TYPE: baseline"
-echo "SEED: 10"
-echo "PROPERTY NO: 0"
+ND=${#DATASET_VALUES[@]}       # 2
+NM=${#MODEL_TYPE_VALUES[@]}    # 4
+NS=${#SEED_VALUES[@]}          # 10
+NP=${#PROPERTY_VALUES[@]}      # 100
+
+d=$(( $X / ( $NM * $NS * $NP ) ))
+m=$(( ( $X / ( $NS * $NP )) % $NM ))
+s=$(( ( $X / $NP ) % $NS ))
+p=$(( $X % $NP ))
+
+DATASET=${DATASET_VALUES[$d]}
+MODEL=${MODEL_TYPE_VALUES[$m]}
+SEED=${SEED_VALUES[$s]}
+PROP=${PROPERTY_VALUES[$p]}
+
+echo "DATASET: ${DATASET}"
+echo "MODEL TYPE: ${MODEL}"
+echo "SEED: ${SEED}"
+echo "PROPERTY NO: ${PROP}"
 echo "VERIFIER: reluplex"
 
 dnnv --reluplex \
     --prop.epsilon=$1 \
-    --network N models/${dataset}/baseline/resnet18-${dataset}-10.onnx \
-    properties/${dataset}/property_0.py
+    --network N models/${DATASET}/${MODEL}/resnet18-${DATASET}-${SEED}.onnx \
+    properties/${DATASET}/property_${PROP}.py
