@@ -3,13 +3,11 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
-#SBATCH --array=0-0
-#SBATCH --output=logs/dnnv_reluplex.out
-#SBATCH --error=logs/dnnv_reluplex.err
+#SBATCH --array=0-99
+#SBATCH --output=logs_verification/dnnv_reluplex.out
 
 module load StdEnv/2020
 module load python/3.9
-module load scipy-stack/2021a
 virtualenv --no-download $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip

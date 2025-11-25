@@ -5,7 +5,6 @@
 #SBATCH --time=1:00:00
 #SBATCH --array=0-0
 #SBATCH --output=logs/dnnv_neurify.out
-#SBATCH --error=logs/dnnv_neurify.err
 
 module load StdEnv/2020
 module load python/3.9

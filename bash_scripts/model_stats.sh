@@ -5,7 +5,6 @@
 #SBATCH --mem=3G
 #SBATCH --time=1:00:00
 #SBATCH --output=logs/model_stats.out
-#SBATCH --error=logs/model_stats.err
 
 module load StdEnv/2023
 module load python/3.11
