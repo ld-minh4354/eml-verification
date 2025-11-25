@@ -1,5 +1,6 @@
 import os, sys
 import re
+import time
 import pandas as pd
 
 
@@ -88,5 +89,8 @@ class RawResult:
 
 
 if __name__ == "__main__":
+    start = time.time()
     rr = RawResult()
     rr.main()
+    end = time.time()
+    print("Runtime:", end - start, "seconds")
