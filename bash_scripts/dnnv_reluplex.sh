@@ -43,6 +43,7 @@ echo "MODEL TYPE: ${MODEL}"
 echo "SEED: ${SEED}"
 echo "PROPERTY NO: ${PROP}"
 echo "VERIFIER: reluplex"
+echo "EPSILON: $1"
 
 dnnv --reluplex \
     --prop.epsilon=$1 \
