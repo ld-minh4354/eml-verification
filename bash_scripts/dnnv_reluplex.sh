@@ -3,8 +3,8 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
-#SBATCH --array=0-99
-#SBATCH --output=logs_verification/dnnv_reluplex.out
+#SBATCH --array=0-1
+#SBATCH --output=logs_verification/dnnv_$A_$a.out
 
 module load StdEnv/2020
 module load python/3.9
@@ -18,7 +18,16 @@ dnnv_manage install reluplex
 
 X=$(( SLURM_ARRAY_TASK_ID ))
 
+DATASET=("MNIST" "CIFAR10")
+dataset=${DATASET[$X]}
+
+echo "DATASET: ${dataset}"
+echo "MODEL TYPE: baseline"
+echo "SEED: 10"
+echo "PROPERTY NO: 0"
+echo "VERIFIER: reluplex"
+
 dnnv --reluplex \
-    --prop.epsilon=0.01 \
-    --network N models/MNIST/baseline/resnet18-MNIST-10.onnx \
-    properties/MNIST/property_${X}.py
+    --prop.epsilon=$EPS \
+    --network N models/${dataset}/baseline/resnet18-${dataset}-10.onnx \
+    properties/${dataset}/property_0.py
