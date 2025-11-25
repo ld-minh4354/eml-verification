@@ -1,10 +1,6 @@
-import os, sys
+import os
 from dnnv.properties import *
 import numpy as np
-
-project_path = os.path.abspath("")
-if project_path not in sys.path:
-    sys.path.append(project_path)
 
 N = Network("N")
 x = Image(os.path.join("test_data", "MNIST", "inputs", "input_20.npy"))

@@ -42,13 +42,9 @@ class GeneratePropertyScripts:
 
     def get_file_content(self, index, label):
         return textwrap.dedent(f"""\
-            import os, sys
+            import os
             from dnnv.properties import *
             import numpy as np
-
-            project_path = os.path.abspath("")
-            if project_path not in sys.path:
-                sys.path.append(project_path)
 
             N = Network("N")
             x = Image(os.path.join("test_data", "{self.dataset}", "inputs", "input_{index}.npy"))
@@ -68,5 +64,5 @@ class GeneratePropertyScripts:
 
 
 if __name__ == "__main__":
-    gps = GeneratePropertyScripts(dataset="MNIST")
+    gps = GeneratePropertyScripts(dataset="CIFAR10")
     gps.main()

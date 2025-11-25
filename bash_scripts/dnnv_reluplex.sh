@@ -28,6 +28,6 @@ echo "PROPERTY NO: 0"
 echo "VERIFIER: reluplex"
 
 dnnv --reluplex \
-    --prop.epsilon=$EPS \
+    --prop.epsilon=$1 \
     --network N models/${dataset}/baseline/resnet18-${dataset}-10.onnx \
     properties/${dataset}/property_0.py
