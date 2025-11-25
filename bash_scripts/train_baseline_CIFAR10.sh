@@ -9,6 +9,7 @@
 
 module load StdEnv/2023
 module load python/3.11
+module load scipy-stack/2025a
 virtualenv --no-download $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip
