@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=dnnv_reluplex
+#SBATCH --job-name=reluplex
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=24:00:00
 #SBATCH --array=0-399
-#SBATCH --output=logs/dnnv_%A_%a.out
+#SBATCH --output=logs/reluplex_%A_%a.out
 
 ### Environment setup
 

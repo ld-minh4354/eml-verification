@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=dnnv_planet
+#SBATCH --job-name=dnnv_mipverify
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:00:00
 #SBATCH --array=0-0
-#SBATCH --output=logs/dnnv_planet.out
+#SBATCH --output=logs/mipverify.out
 
 module load StdEnv/2020
 module load python/3.9
@@ -14,11 +14,11 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_dnnv.txt
 
-dnnv_manage install planet
+dnnv_manage install mipverify
 
 X=$(( SLURM_ARRAY_TASK_ID ))
 
-dnnv --planet \
+dnnv --mipverify \
     --prop.epsilon=0.01 \
     --network N models/MNIST/baseline/resnet18-MNIST-10.onnx \
     properties/MNIST/property_${X}.py
