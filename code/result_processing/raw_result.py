@@ -1,6 +1,5 @@
 import os, sys
 import re
-import time
 import pandas as pd
 
 
@@ -25,15 +24,6 @@ class RawResult:
         for file_name in os.listdir(self.folder):
             file_path = os.path.join(self.folder, file_name)
 
-            if not os.path.isfile(file_path):
-                continue
-
-            if not file_name.endswith(".out"):
-                continue
-
-            if not file_name.startswith("dnnv_"):
-                continue
-
             with open(file_path, "r") as f:
                 content = f.read()
             
@@ -41,6 +31,12 @@ class RawResult:
         
         os.makedirs("results", exist_ok=True)
         self.df.to_csv(os.path.join("results", "raw_result.csv"), index=False)
+
+        self.group_by_model_and_seed()
+        self.df.to_csv(os.path.join("results", "result_by_model_and_seed.csv"), index=False)
+
+        self.group_by_model()
+        self.df.to_csv(os.path.join("results", "result_by_model.csv"), index=False)
     
 
     def process_file(self, file_name, content):
@@ -54,11 +50,8 @@ class RawResult:
 
         if "result: unsat" in content:
             result = 1
-        elif "result: sat" in content:
-            result = 0
         else:
-            result = None
-            print(f"Error processing RESULT in {file_name}")
+            result = 0
 
         self.df.loc[len(self.df)] = {
                     "file_name": file_name,
@@ -70,6 +63,32 @@ class RawResult:
                     "property": prop,
                     "result": result
                 }
+        
+
+    def group_by_model_and_seed(self):
+        self.df = (
+            self.df
+            .groupby(["dataset", "model_type", "seed", "epsilon", "property"], as_index=False)
+            .agg(result=("result", "max"))
+        )
+
+        self.df = (
+            self.df
+            .groupby(["dataset", "model_type", "seed", "epsilon"], as_index=False)
+            .agg(result=("result", "sum"))
+        )
+
+        self.df = self.df.sort_values(["dataset", "model_type", "seed", "epsilon"])
+
+
+    def group_by_model(self):
+        self.df = (
+            self.df
+            .groupby(["dataset", "model_type", "epsilon"], as_index=False)
+            .agg(result=("result", "sum"))
+        )
+
+        self.df = self.df.sort_values(["dataset", "model_type", "epsilon"])
 
 
     def regex_helper(self, file_name, content, header):
@@ -84,12 +103,6 @@ class RawResult:
 
 
 
-            
-
-
 if __name__ == "__main__":
-    start = time.time()
     rr = RawResult()
     rr.main()
-    end = time.time()
-    print("Runtime:", end - start, "seconds")
