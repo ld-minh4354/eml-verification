@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=1:00:00
+#SBATCH --time=0:10:00
 #SBATCH --output=logs/model_stats.out
 
 module load StdEnv/2023

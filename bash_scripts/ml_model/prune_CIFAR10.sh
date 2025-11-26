@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=1:00:00
+#SBATCH --time=0:20:00
 #SBATCH --array=0-59
 #SBATCH --output=logs_training/prune_CIFAR10_%a.out
 
