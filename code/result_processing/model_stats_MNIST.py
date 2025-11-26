@@ -9,12 +9,12 @@ from torchvision import datasets, transforms, models
 
 
 
-class ModelStatsCIFAR10:
+class ModelStatsMNIST:
     def __init__(self):
         self.add_project_folder_to_pythonpath()
         self.device = torch.device("cuda")
 
-        self.model_type = ["baseline", "prune_0.2", "prune_0.4", "prune_0.6"]
+        self.model_type = ["baseline", "prune_0.2", "prune_0.4", "prune_0.6", "prune_0.7", "prune_0.75", "prune_0.8"]
         self.seed = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
         self.df = pd.DataFrame(columns=["model_type", "seed", "accuracy", "zero_weight_percentage"])
@@ -31,7 +31,7 @@ class ModelStatsCIFAR10:
         self.process_models()
 
         os.makedirs("results", exist_ok=True)
-        self.df.to_csv(os.path.join("results", "model_stats_CIFAR10.csv"), index=False)
+        self.df.to_csv(os.path.join("results", "model_stats_MNIST.csv"), index=False)
 
 
     def load_data(self):
@@ -39,14 +39,11 @@ class ModelStatsCIFAR10:
 
         transform_test = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize(
-                mean=[0.4914, 0.4822, 0.4465],
-                std=[0.2023, 0.1994, 0.2010]
-            )
+            transforms.Normalize((0.1307,), (0.3081,))
         ])
 
         os.makedirs("raw_datasets", exist_ok=True)
-        test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=False, transform=transform_test)
+        test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=False, transform=transform_test)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 
@@ -67,12 +64,12 @@ class ModelStatsCIFAR10:
 
     def load_model(self, model_type, seed):
         model = models.resnet18()
-        model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
         model.maxpool = nn.Identity()
         model.fc = nn.Linear(512, self.num_classes)
         model = model.to(self.device)
 
-        state_dict = torch.load(os.path.join("models", "CIFAR10", model_type, f"resnet18-CIFAR10-{seed}.pth"), 
+        state_dict = torch.load(os.path.join("models", "MNIST", model_type, f"resnet18-MNIST-{seed}.pth"), 
                                 map_location=self.device)
         model.load_state_dict(state_dict)
 
@@ -111,5 +108,5 @@ class ModelStatsCIFAR10:
 
 
 if __name__ == "__main__":
-    stats = ModelStatsCIFAR10()
+    stats = ModelStatsMNIST()
     stats.main()

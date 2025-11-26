@@ -116,7 +116,7 @@ class PruneMNIST:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training ResNet18 for MNIST under seed {self.seed}\n")
+        print(f"Pruning ResNet18 for MNIST under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             test_accuracy = self.train_loop(epoch)
