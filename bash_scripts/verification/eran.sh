@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=eran
-#SBATCH --gpus-per-node=a100:1
+#SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=24:00:00
 #SBATCH --array=0-0
