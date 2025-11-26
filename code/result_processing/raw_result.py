@@ -42,9 +42,9 @@ class RawResult:
     def process_file(self, file_name, content):
         self.error = False
         dataset = self.regex_helper(file_name, content, "DATASET")
-        model_type = self.regex_helper(file_name, content, "MODEL TYPE")
+        model_type = self.regex_helper(file_name, content, "MODEL")
         seed = self.regex_helper(file_name, content, "SEED")
-        prop = self.regex_helper(file_name, content, "PROPERTY NO")
+        prop = self.regex_helper(file_name, content, "PROPERTY")
         verifier = self.regex_helper(file_name, content, "VERIFIER")
         epsilon = self.regex_helper(file_name, content, "EPSILON")
 

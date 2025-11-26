@@ -6,7 +6,8 @@
 #SBATCH --array=0-399
 #SBATCH --output=logs/dnnv_%A_%a.out
 
-# Environment setup
+### Environment setup
+
 module load StdEnv/2020
 module load python/3.9
 
@@ -17,7 +18,7 @@ pip install --no-index -r $HOME/requirements_dnnv.txt
 
 dnnv_manage install reluplex
 
-# Defining variables
+### Defining variables
 
 DATASET_VALUES=("MNIST" "CIFAR10")
 MODEL_TYPE_VALUES=("baseline" "prune_0.2" "prune_0.4" "prune_0.6")
@@ -40,9 +41,8 @@ if (( END >= TOTAL )); then
     END=$(( TOTAL - 1 ))
 fi
 
-echo "ARRAY TASK: $SLURM_ARRAY_TASK_ID processes tasks $START → $END"
+### Loop through 20 tasks in this array job
 
-# Loop through 20 tasks in this array job
 for (( X=$START; X<=$END; X++ )); do
 
     # Decode X into dataset/model/seed/property
@@ -67,13 +67,12 @@ for (( X=$START; X<=$END; X++ )); do
         echo "MODEL: $MODEL"
         echo "SEED: $SEED"
         echo "PROPERTY: $PROP"
+        echo "VERIFIER: reluplex"
         echo "EPSILON: $1"
-        echo "TIME LIMIT PER TASK: 1 hour"
         echo ""
 
-        # -----------------------------
-        # Run the actual verification with 1-hour timeout
-        # -----------------------------
+        ### Run the actual verification with 1-hour timeout
+        
         timeout 1h dnnv --reluplex \
             --prop.epsilon="$1" \
             --network N models/${DATASET}/${MODEL}/resnet18-${DATASET}-${SEED}.onnx \
