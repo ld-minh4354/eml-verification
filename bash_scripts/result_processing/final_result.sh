@@ -15,4 +15,4 @@ pip install --no-index -r $HOME/requirements_main.txt
 
 echo "Processing raw results"
 
-srun python code/result_processing/raw_result.py
+srun python code/result_processing/final_result.py

@@ -3,7 +3,7 @@
 #SBATCH --mem=3G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=24:00:00
-#SBATCH --array=0-399
+#SBATCH --array=0-899
 #SBATCH --output=logs/reluplex_%A_%a.out
 
 ### Environment setup
@@ -21,22 +21,24 @@ dnnv_manage install reluplex
 ### Defining variables
 
 DATASET_VALUES=("MNIST" "CIFAR10")
-MODEL_TYPE_VALUES=("baseline" "prune_0.2" "prune_0.4" "prune_0.6")
+MODEL_TYPE_VALUES=("baseline"
+                   "prune_0.2" "prune_0.4" "prune_0.6" "prune_0.7"
+                   "prune_0.75" "prune_0.8" "prune_0.85" "prune_0.9")
 SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
 PROPERTY_VALUES=($(seq 0 99))
 
 ND=${#DATASET_VALUES[@]}        # 2
-NM=${#MODEL_TYPE_VALUES[@]}     # 4
+NM=${#MODEL_TYPE_VALUES[@]}     # 9
 NS=${#SEED_VALUES[@]}           # 10
 NP=${#PROPERTY_VALUES[@]}       # 100
 
-TOTAL=$(( ND * NM * NS * NP ))  # 8000
+TOTAL=$(( ND * NM * NS * NP ))  # 18000
 
 TASKS_PER_ARRAY=20
 START=$(( SLURM_ARRAY_TASK_ID * TASKS_PER_ARRAY ))
 END=$(( START + TASKS_PER_ARRAY - 1 ))
 
-# Avoid exceeding 8000
+# Avoid exceeding 18000
 if (( END >= TOTAL )); then
     END=$(( TOTAL - 1 ))
 fi

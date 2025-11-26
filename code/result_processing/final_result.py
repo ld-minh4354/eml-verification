@@ -4,7 +4,7 @@ import pandas as pd
 
 
 
-class RawResult:
+class FinalResult:
     def __init__(self):
         self.add_project_folder_to_pythonpath()
         self.folder = os.path.join("logs_verification")
@@ -104,5 +104,5 @@ class RawResult:
 
 
 if __name__ == "__main__":
-    rr = RawResult()
-    rr.main()
+    fr = FinalResult()
+    fr.main()

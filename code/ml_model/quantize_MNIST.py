@@ -9,6 +9,8 @@ import torch.nn as nn
 from torch.nn.utils import prune
 from torchvision import datasets, transforms, models
 
+from torchao.quantization.pt2e.quantize_pt2e import prepare_pt2e, convert_pt2e
+
 
 
 class QuantizeMNIST:
@@ -16,7 +18,7 @@ class QuantizeMNIST:
         self.add_project_folder_to_pythonpath()
         self.seed = seed
         self.set_seed(seed)
-        self.device = torch.device("cuda")
+        self.device = torch.device("cpu")
 
 
     def add_project_folder_to_pythonpath(self):
