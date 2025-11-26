@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=model_stats
-#SBATCH --gpus-per-node=a100:1
+#SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=0:20:00
