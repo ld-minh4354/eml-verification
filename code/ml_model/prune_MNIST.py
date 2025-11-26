@@ -40,6 +40,7 @@ class PruneMNIST:
         self.load_model()
         self.set_hyperparameters()
         self.training()
+        self.save_model()
 
 
     def count_zero_weights(self):
@@ -128,6 +129,8 @@ class PruneMNIST:
 
         self.count_zero_weights()
 
+
+    def save_model(self):
         os.makedirs(os.path.join("models", "MNIST", f"prune_{self.prune_rate}"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet18-MNIST-{self.seed}.pth"))
 

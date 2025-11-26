@@ -37,6 +37,7 @@ class TrainBaselineCIFAR10:
         self.load_data()
         self.set_hyperparameters()
         self.training()
+        self.save_model()
 
 
     def load_data(self):
@@ -96,6 +97,8 @@ class TrainBaselineCIFAR10:
             if test_accuracy >= 0.9:
                 break
 
+    
+    def save_model(self):
         os.makedirs(os.path.join("models", "CIFAR10", "baseline"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"))
 

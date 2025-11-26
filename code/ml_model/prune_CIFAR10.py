@@ -40,6 +40,7 @@ class PruneCIFAR10:
         self.load_model()
         self.set_hyperparameters()
         self.training()
+        self.save_model()
 
 
     def load_data(self):
@@ -119,6 +120,8 @@ class PruneCIFAR10:
         for module, _ in self.parameters_to_prune:
             prune.remove(module, 'weight')
 
+
+    def save_model(self):
         os.makedirs(os.path.join("models", "CIFAR10", f"prune_{self.prune_rate}"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "CIFAR10", f"prune_{self.prune_rate}", f"resnet18-CIFAR10-{self.seed}.pth"))
 

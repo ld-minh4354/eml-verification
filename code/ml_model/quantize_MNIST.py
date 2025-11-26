@@ -38,6 +38,7 @@ class QuantizeMNIST:
         self.load_data()
         self.load_model()
         self.quantization()
+        self.save_model()
 
 
     def load_data(self):
@@ -76,8 +77,10 @@ class QuantizeMNIST:
 
 
     def quantization(self):
-        
+        pass
 
+
+    def save_model(self):
         os.makedirs(os.path.join("models", "MNIST", f"prune_{self.prune_rate}"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet18-MNIST-{self.seed}.pth"))
 
