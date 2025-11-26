@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:20:00
-#SBATCH --array=0-69
+#SBATCH --array=0-79
 #SBATCH --output=logs_training/prune_MNIST_%a.out
 
 module load StdEnv/2023
@@ -15,7 +15,7 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_main.txt
 
-PRUNE_VALUES=(20 40 60 70 80 85 90)
+PRUNE_VALUES=(20 40 60 70 75 80 85 90)
 SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
 
 NUM_J=${#SEED_VALUES[@]}
