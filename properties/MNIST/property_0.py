@@ -11,7 +11,7 @@ true_class = 1
 Forall(
     x_,  
     Implies(
-        (x - epsilon < x_) & (x_ < x + epsilon) & (0 < x_) & (x_ < 1),
+        (x - epsilon < x_) & (x_ < x + epsilon),
         np.argmax(N(x_)) == true_class,
     ),
 )
