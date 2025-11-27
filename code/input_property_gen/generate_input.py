@@ -51,7 +51,7 @@ class GenerateInput:
             ])
 
             os.makedirs("raw_datasets", exist_ok=True)
-            self.test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=True, transform=transform_test)
+            self.test_dataset = datasets.CIFAR10(root="raw_datasets", train=False, download=False, transform=transform_test)
 
         elif self.dataset == "MNIST":
             self.num_classes = 10
@@ -62,7 +62,7 @@ class GenerateInput:
             ])
 
             os.makedirs("raw_datasets", exist_ok=True)
-            self.test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=True, transform=transform_test)
+            self.test_dataset = datasets.MNIST(root="raw_datasets", train=False, download=False, transform=transform_test)
 
         else:
             raise Exception("Not implemented yet.")
@@ -80,6 +80,9 @@ class GenerateInput:
 
         for i in range(100):
             image, label = self.test_dataset[self.indices[i]]
+
+            print(image)
+            return
 
             image_np = image.numpy()
             np.save(os.path.join("test_data", self.dataset, "inputs", f"input_{i}.npy"), image_np)

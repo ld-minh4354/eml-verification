@@ -1,3 +1,5 @@
-import onnx, os
-m = onnx.load(os.path.join("models", "MNIST", "baseline", "resnet18-MNIST-10.onnx"))
-print([n.op_type for n in m.graph.node])
+import numpy as np
+import os
+
+arr = np.load(os.path.join("test_data", "MNIST", "inputs", "input_3.npy"))
+print(arr)
