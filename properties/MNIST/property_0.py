@@ -6,7 +6,7 @@ N = Network("N")
 x = Image(os.path.join("test_data", "MNIST", "inputs", "input_0.npy"))
 
 epsilon = Parameter("epsilon", type=float)
-true_class = 2
+true_class = 1
 
 Forall(
     x_,  
