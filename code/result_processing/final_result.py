@@ -1,6 +1,7 @@
 import os, sys
 import re
 import pandas as pd
+from concurrent.futures import ProcessPoolExecutor
 
 
 
@@ -21,13 +22,12 @@ class FinalResult:
 
     
     def main(self):
-        for file_name in os.listdir(self.folder):
-            file_path = os.path.join(self.folder, file_name)
+        rows = []
+        with ProcessPoolExecutor() as executor:
+            for row in executor.map(self.process_file_wrapper, self.iter_file_paths(), chunksize=200):
+                rows.append(row)
 
-            with open(file_path, "r") as f:
-                content = f.read()
-            
-            self.process_file(file_name, content)
+        self.df = pd.DataFrame(rows)
         
         os.makedirs("results", exist_ok=True)
         self.df.to_csv(os.path.join("results", "raw_result.csv"), index=False)
@@ -37,10 +37,22 @@ class FinalResult:
 
         self.group_by_model()
         self.df.to_csv(os.path.join("results", "result_by_model.csv"), index=False)
+
+
+    def iter_file_paths(self):
+        for entry in os.scandir(self.folder):
+            if entry.is_file():
+                yield entry.path
+
+
+    def process_file_wrapper(self, file_path):
+        file_name = os.path.basename(file_path)
+        with open(file_path, "r") as f:
+            content = f.read()
+        return self.process_file(file_name, content)
     
 
     def process_file(self, file_name, content):
-        self.error = False
         dataset = self.regex_helper(file_name, content, "DATASET")
         model_type = self.regex_helper(file_name, content, "MODEL")
         seed = self.regex_helper(file_name, content, "SEED")
@@ -53,16 +65,16 @@ class FinalResult:
         else:
             result = 0
 
-        self.df.loc[len(self.df)] = {
-                    "file_name": file_name,
-                    "dataset": dataset,
-                    "model_type": model_type,
-                    "seed": seed,
-                    "epsilon": epsilon,
-                    "verifier": verifier,
-                    "property": prop,
-                    "result": result
-                }
+        return {
+            "file_name": file_name,
+            "dataset": dataset,
+            "model_type": model_type,
+            "seed": seed,
+            "epsilon": epsilon,
+            "verifier": verifier,
+            "property": prop,
+            "result": result
+        }
         
 
     def group_by_model_and_seed(self):

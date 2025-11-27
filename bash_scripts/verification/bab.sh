@@ -9,12 +9,12 @@
 ### Environment setup
 
 module load StdEnv/2020
-module load python/3.8
+module load python/3.9
 
 virtualenv --no-download $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip
-pip install --no-index -r $HOME/requirements_bab.txt
+pip install --no-index -r $HOME/requirements_dnnv.txt
 
 dnnv_manage install bab
 

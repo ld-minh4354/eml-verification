@@ -1,9 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=raw_result
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=3G
-#SBATCH --time=0:30:00
-#SBATCH --output=logs/raw_result.out
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0:20:00
+#SBATCH --output=logs/final_result.out
 
 module load StdEnv/2023
 module load python/3.11
