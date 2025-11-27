@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=24:00:00
 #SBATCH --array=0-0
-#SBATCH --output=logs/neurify_%a.out
+#SBATCH --output=logs/neurify_%A_%a.out
 
 ### Environment setup
 

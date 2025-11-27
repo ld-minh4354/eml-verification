@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=24:00:00
 #SBATCH --array=0-899
-#SBATCH --output=logs/reluplex_%a.out
+#SBATCH --output=logs/reluplex_%A_%a.out
 
 ### Environment setup
 
