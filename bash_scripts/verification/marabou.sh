@@ -16,7 +16,7 @@ source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip
 pip install --no-index -r $HOME/requirements_dnnv.txt
 
-export OPENBLAS_TARGET=GENERIC
+module load openblas
 dnnv_manage install marabou
 
 ### Defining variables
