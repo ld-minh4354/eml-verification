@@ -6,4 +6,4 @@
 #SBATCH --time=0:05:00
 #SBATCH --output=logs/abc_testing.out
 
-source .venv/bin/activate
+source $HOME/eml-verification/.venv_abc/bin/activate
