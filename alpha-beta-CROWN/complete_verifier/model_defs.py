@@ -36,7 +36,7 @@ def eml_mnist():
 
 def eml_cifar10():
     model = models.resnet18()
-    model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
     model.maxpool = nn.Identity()
     model.avgpool = nn.AvgPool2d(kernel_size=4)
     model.fc = nn.Linear(512, 10)
