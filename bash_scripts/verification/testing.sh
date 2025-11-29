@@ -7,3 +7,6 @@
 #SBATCH --output=logs/abc_testing.out
 
 source $HOME/eml-verification/.venv_abc/bin/activate
+
+srun python $HOME/eml-verification/alpha-beta-CROWN/abcrown.py \
+    --config $HOME/eml-verification/alpha-beta-CROWN/exp_configs/tutorial_examples/cifar_resnet_2b.yaml

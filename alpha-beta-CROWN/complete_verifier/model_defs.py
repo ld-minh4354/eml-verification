@@ -19,10 +19,29 @@ from torch.nn import functional as F
 import torch.nn as nn
 from collections import OrderedDict
 import math
+from torchvision import models
 
 ########################################
 # Defined the model architectures
 ########################################
+
+def eml_mnist():
+    model = models.resnet18()
+    model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    model.maxpool = nn.Identity()
+    model.avgpool = nn.AvgPool2d(kernel_size=4)
+    model.fc = nn.Linear(512, 10)
+    return model
+
+
+def eml_cifar10():
+    model = models.resnet18()
+    model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    model.maxpool = nn.Identity()
+    model.avgpool = nn.AvgPool2d(kernel_size=4)
+    model.fc = nn.Linear(512, 10)
+    return model
+
 
 class BasicBlock(nn.Module):
     expansion = 1
