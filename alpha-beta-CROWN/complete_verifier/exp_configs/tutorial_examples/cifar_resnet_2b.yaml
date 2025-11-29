@@ -7,7 +7,7 @@ data:
   mean: [0.4914, 0.4822, 0.4465]  # Mean for normalization.
   std: [0.2471, 0.2435, 0.2616]  # Std for normalization.
   start: 0  # First example to verify in dataset.
-  end: 0  # Last example to verify in dataset. We verify 100 examples in this test.
+  end: 1  # Last example to verify in dataset. We verify 100 examples in this test.
 specification:
   norm: .inf  # Linf norm (can also be 2 or 1).
   epsilon: 0.001
