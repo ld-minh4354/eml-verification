@@ -10,6 +10,6 @@ data:
   end: 1  # Last example to verify in dataset. We verify 100 examples in this test.
 specification:
   norm: .inf  # Linf norm (can also be 2 or 1).
-  epsilon: 0.1
+  epsilon: 0.001
 solver:
   batch_size: 1
