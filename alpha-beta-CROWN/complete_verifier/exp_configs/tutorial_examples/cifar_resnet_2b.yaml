@@ -12,4 +12,4 @@ specification:
   norm: .inf  # Linf norm (can also be 2 or 1).
   epsilon: 0.001
 solver:
-  batch_size: 64
+  batch_size: 1
