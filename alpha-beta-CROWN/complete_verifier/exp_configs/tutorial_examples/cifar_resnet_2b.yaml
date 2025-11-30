@@ -1,7 +1,7 @@
 # This is an example configuration file that contains most useful parameter settings.
 model:
-  name: resnet2b  # This model is defined in model_defs.py. Add your own model definitions there.
-  path: alpha-beta-CROWN/complete_verifier/models/cifar10_resnet/resnet2b.pth
+  name: eml_cifar10  # This model is defined in model_defs.py. Add your own model definitions there.
+  path: models/CIFAR10/baseline/resnet18-CIFAR10-10.pth  # Path to PyTorch checkpoint.
 data:
   dataset: CIFAR  # Dataset name. This is just the standard CIFAR-10 test set defined in the "load_verification_dataset()" function in utils.py
   mean: [0.4914, 0.4822, 0.4465]  # Mean for normalization.
@@ -10,6 +10,6 @@ data:
   end: 1  # Last example to verify in dataset. We verify 100 examples in this test.
 specification:
   norm: .inf  # Linf norm (can also be 2 or 1).
-  epsilon: 0.00001
+  epsilon: 0.001
 solver:
-  batch_size: 1
+  batch_size: 1024

@@ -9,10 +9,7 @@
 source $HOME/eml-verification/.venv_abc/bin/activate
 
 export OMP_NUM_THREADS=1
-
-echo "=== GPU Info ==="
-nvidia-smi
-echo "CUDA_VISIBLE_DEVICES = $CUDA_VISIBLE_DEVICES"
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
 
 srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
     --config $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/cifar_resnet_2b.yaml
