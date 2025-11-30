@@ -8,5 +8,7 @@
 
 source $HOME/eml-verification/.venv_abc/bin/activate
 
+export OMP_NUM_THREADS=8
+
 srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
     --config $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/cifar_resnet_2b.yaml
