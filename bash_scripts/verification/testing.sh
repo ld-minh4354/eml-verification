@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=testing
 #SBATCH --gpus-per-node=h100:1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=61G
 #SBATCH --time=0:05:00
 #SBATCH --output=logs/abc_testing.out
 
 source $HOME/eml-verification/.venv_abc/bin/activate
 
-export OMP_NUM_THREADS=8
+export OMP_NUM_THREADS=1
 
 srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
     --config $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/cifar_resnet_2b.yaml
