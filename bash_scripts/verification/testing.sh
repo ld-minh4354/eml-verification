@@ -12,4 +12,4 @@ export OMP_NUM_THREADS=1
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
 
 srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
-    --config $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/cifar_resnet_2b.yaml
+    --config $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/mnist_cnn_a_adv.yaml
