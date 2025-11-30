@@ -1,6 +1,6 @@
 model:
   name: mnist_cnn_4layer
-  path: models/sdp/mnist_cnn_a_adv.model
+  path: alpha-beta-CROWN/complete_verifier/exp_configs/tutorial_examples/mnist_cnn_a_adv.yaml
 data:
   dataset: MNIST
   start: 0
