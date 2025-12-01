@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=testing
-#SBATCH --gpus-per-node=a100:4
+#SBATCH --gpus-per-node=h100:4
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=61G
 #SBATCH --time=0:05:00
