@@ -67,7 +67,7 @@ class ResNet4(nn.Module):
         super().__init__()
         
         # Initial conv layer
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)
 
         # 2 residual blocks
@@ -89,11 +89,12 @@ class ResNet4(nn.Module):
         return out
 
 def eml_mnist():
-    model = models.resnet18()
-    model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-    model.maxpool = nn.Identity()
-    model.avgpool = nn.AvgPool2d(kernel_size=4)
-    model.fc = nn.Linear(512, 10)
+    # model = models.resnet18()
+    # model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    # model.maxpool = nn.Identity()
+    # model.avgpool = nn.AvgPool2d(kernel_size=4)
+    # model.fc = nn.Linear(512, 10)
+    model = ResNet4()
     return model
 
 
