@@ -1,11 +1,11 @@
 # This is an example configuration file that contains most useful parameter settings.
 model:
-  name: eml_cifar10  # This model is defined in model_defs.py. Add your own model definitions there.
-  path: models/CIFAR10/baseline/resnet18-CIFAR10-10.pth  # Path to PyTorch checkpoint.
+  name: eml_mnist  # This model is defined in model_defs.py. Add your own model definitions there.
+  path: models/MNIST/baseline/resnet18-MNIST-10.pth  # Path to PyTorch checkpoint.
 data:
-  dataset: CIFAR  # Dataset name. This is just the standard CIFAR-10 test set defined in the "load_verification_dataset()" function in utils.py
-  mean: [0.4914, 0.4822, 0.4465]  # Mean for normalization.
-  std: [0.2471, 0.2435, 0.2616]  # Std for normalization.
+  dataset: MNIST  # Dataset name. This is just the standard CIFAR-10 test set defined in the "load_verification_dataset()" function in utils.py
+  mean: [0.1307] #[0.4914, 0.4822, 0.4465]  # Mean for normalization.
+  std: [0.3081] #[0.2471, 0.2435, 0.2616]  # Std for normalization.
   start: 0  # First example to verify in dataset.
   end: 1  # Last example to verify in dataset. We verify 100 examples in this test.
 specification:
