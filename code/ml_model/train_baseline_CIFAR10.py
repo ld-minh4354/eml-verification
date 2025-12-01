@@ -9,6 +9,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 
+from resnet18_CIFAR10 import BasicBlock, ResNet
+
+
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
@@ -148,7 +151,7 @@ class TrainBaselineCIFAR10:
         # self.model.maxpool = nn.Identity()
         # self.model.avgpool = nn.AvgPool2d(kernel_size=4)
         # self.model.fc = nn.Linear(512, self.num_classes)
-        self.model = ResNet4()
+        self.model = ResNet(BasicBlock, [2, 2, 2, 2], in_planes=16)
         self.model = self.model.to(self.device)
 
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)

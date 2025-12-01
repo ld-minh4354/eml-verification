@@ -25,6 +25,15 @@ from torchvision import models
 # Defined the model architectures
 ########################################
 
+
+def eml_mnist():
+    return ResNet4()
+
+
+def eml_cifar10():
+    return ResNet(BasicBlock, [2, 2, 2, 2], in_planes=16)
+
+
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
         super().__init__()
@@ -87,19 +96,6 @@ class ResNet4(nn.Module):
         out = torch.flatten(out, 1)
         out = self.fc(out)
         return out
-
-def eml_mnist():
-    return ResNet(BasicBlock, [2, 2, 2, 2], in_planes=1)
-
-
-def eml_cifar10():
-    # model = models.resnet18()
-    # model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
-    # model.maxpool = nn.Identity()
-    # model.avgpool = nn.AvgPool2d(kernel_size=4)
-    # model.fc = nn.Linear(512, 10)
-    model = ResNet4()
-    return model
 
 
 class BasicBlock(nn.Module):
