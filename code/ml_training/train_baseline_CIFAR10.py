@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-from code.ml_model.resnet18_CIFAR10 import BasicBlock, ResNet
+from resnet18_CIFAR10 import BasicBlock, ResNet18
 
 
 
@@ -85,7 +85,7 @@ class TrainBaselineCIFAR10:
         # self.model.maxpool = nn.Identity()
         # self.model.avgpool = nn.AvgPool2d(kernel_size=4)
         # self.model.fc = nn.Linear(512, self.num_classes)
-        self.model = ResNet(BasicBlock, [2, 2, 2, 2], in_planes=16)
+        self.model = ResNet18(BasicBlock, [2, 2, 2, 2], in_planes=16)
         self.model = self.model.to(self.device)
 
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)

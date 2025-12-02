@@ -7,9 +7,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn.utils import prune
-from torchvision import datasets, transforms, models
+from torchvision import datasets, transforms
 
-from code.ml_model.resnet18_CIFAR10 import BasicBlock, ResNet
+from resnet18_CIFAR10 import BasicBlock, ResNet18
 
 
 
@@ -75,7 +75,7 @@ class PruneCIFAR10:
 
     
     def load_model(self):
-        self.model = ResNet(BasicBlock, [2, 2, 2, 2], in_planes=16)
+        self.model = ResNet18(BasicBlock, [2, 2, 2, 2], in_planes=16)
         self.model = self.model.to(self.device)
 
         state_dict = torch.load(os.path.join("models", "CIFAR10", "baseline", f"resnet18-CIFAR10-{self.seed}.pth"), 

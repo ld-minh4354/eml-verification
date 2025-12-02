@@ -7,6 +7,8 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms, models
 
+from resnet18_CIFAR10 import BasicBlock, ResNet18
+
 
 
 class ModelStatsCIFAR10:
@@ -67,7 +69,7 @@ class ModelStatsCIFAR10:
 
 
     def load_model(self, model_type, seed):
-        model = models.resnet18()
+        model = ResNet18(BasicBlock, [2, 2, 2, 2], in_planes=16)
         model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
         model.maxpool = nn.Identity()
         model.fc = nn.Linear(512, self.num_classes)

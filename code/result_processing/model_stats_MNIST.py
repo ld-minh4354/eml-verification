@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms, models
 
-from code.ml_model.resnet4_MNIST import ResNet4
+from resnet4_MNIST import ResNet4
 
 
 
