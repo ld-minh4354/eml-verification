@@ -11,7 +11,7 @@ module load StdEnv/2023
 module load python/3.11
 source $HOME/eml-verification/.venv_abc/bin/activate
 
-export OMP_NUM_THREADS=8
+export OMP_NUM_THREADS=1
 
 for (( X=0; X<20; X++ )); do
     ID=$((SLURM_ARRAY_TASK_ID * 20 + X))
