@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=00:20:00
+#SBATCH --time=0:20:00
 #SBATCH --array=0-79
 #SBATCH --output=logs_training/prune_MNIST_%a.out
 
@@ -25,6 +25,6 @@ seed_index=$(( SLURM_ARRAY_TASK_ID % NUM_J ))
 prune=${PRUNE_VALUES[$prune_index]}
 seed=${SEED_VALUES[$seed_index]}
 
-echo "Prune model for CIFAR10 with seed=$seed, prune ratio=$prune %"
+echo "Prune model for MNIST with seed=$seed, prune ratio=$prune %"
 
 srun python code/ml_training/prune_MNIST.py --seed $seed --prune $prune
