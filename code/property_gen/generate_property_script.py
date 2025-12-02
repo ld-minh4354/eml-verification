@@ -1,6 +1,5 @@
 import os, sys
 import textwrap
-import itertools
 import argparse
 
 
@@ -26,19 +25,6 @@ class GeneratePropertyScripts:
             sys.path.append(project_path)
 
 
-    def main(self):
-        index = 0
-
-        for model, seed, property in itertools.product(self.model_types, self.seed_values, self.property_values):
-            file_content = self.get_file_content(model, seed, property)
-
-            file_path = os.path.join("properties", "MNIST", self.epsilon, f"{index}.yaml")
-            with open(file_path, "w") as f:
-                f.write(file_content)
-
-            index += 1
-
-
     def generate(self, index):
         model_index = index // 1000
         seed_index = (index % 1000) // 100
@@ -53,6 +39,15 @@ class GeneratePropertyScripts:
         file_path = os.path.join("properties", f"current_{self.job_index}.yaml")
         with open(file_path, "w") as f:
             f.write(file_content)
+
+
+    def print_info(self, model, seed, property):
+        print(f"DATASET: MNIST")
+        print(f"MODEL: {model}")
+        print(f"SEED: {seed}")
+        print(f"PROPERTY: {property}")
+        print(f"VERIFIER: abc")
+        print(f"EPSILON: {self.epsilon}")
 
 
     def get_file_content(self, model, seed, property):
@@ -76,8 +71,9 @@ class GeneratePropertyScripts:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--epsilon", type=float, default=0.01, help="Epsilon in verification")
+    parser.add_argument("--index", type=int, default=0, help="Index of verification property")
     parser.add_argument("--job", type=int, default=0, help="Job array")
     args = parser.parse_args()
 
     gps = GeneratePropertyScripts(epsilon=args.epsilon, job_index=args.job)
-    gps.main()
+    gps.generate(index=args.index)
