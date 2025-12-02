@@ -60,7 +60,7 @@ class FinalResult:
         verifier = self.regex_helper(file_name, content, "VERIFIER")
         epsilon = self.regex_helper(file_name, content, "EPSILON")
 
-        if "result: unsat" in content:
+        if "total verified (safe/unsat): 1" in content:
             result = 1
         else:
             result = 0

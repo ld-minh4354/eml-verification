@@ -34,6 +34,7 @@ class GeneratePropertyScripts:
         seed = self.seed_values[seed_index]
         property = self.property_values[property_index]
 
+        self.print_info(model, seed, property)
         file_content = self.get_file_content(model, seed, property)
 
         file_path = os.path.join("properties", f"current_{self.job_index}.yaml")
