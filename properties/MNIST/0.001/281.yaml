@@ -1,0 +1,12 @@
+model:
+    name: eml_mnist
+    path: models/MNIST/baseline/resnet4-MNIST-30.pth
+data:
+    dataset: MNIST
+    mean: [0.1307]
+    std:  [0.3081]
+    start: 81
+    end: 82
+specification:
+    norm: .inf
+    epsilon: 0.001

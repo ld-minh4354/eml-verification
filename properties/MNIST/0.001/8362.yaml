@@ -1,0 +1,12 @@
+model:
+    name: eml_mnist
+    path: models/MNIST/prune_0.9/resnet4-MNIST-40.pth
+data:
+    dataset: MNIST
+    mean: [0.1307]
+    std:  [0.3081]
+    start: 62
+    end: 63
+specification:
+    norm: .inf
+    epsilon: 0.001

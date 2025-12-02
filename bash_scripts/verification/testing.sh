@@ -10,7 +10,5 @@ module load StdEnv/2023
 module load python/3.11
 source $HOME/eml-verification/.venv_abc/bin/activate
 
-export OMP_NUM_THREADS=1
-
 timeout 5m srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
     --config $HOME/eml-verification/properties/testing.yaml
