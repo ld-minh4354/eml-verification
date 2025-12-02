@@ -19,7 +19,7 @@ for (( X=0; X<20; X++ )); do
 
     {
         srun python code/property_gen/generate_property_script.py \
-        --epsilon 0.01 --index $ID --job $SLURM_ARRAY_TASK_ID
+        --epsilon 0.001 --index $ID --job $SLURM_ARRAY_TASK_ID
 
         timeout 5m srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
         --config $HOME/eml-verification/properties/current_${SLURM_ARRAY_TASK_ID}.yaml
