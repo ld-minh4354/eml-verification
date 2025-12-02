@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=61G
 #SBATCH --time=2:00:00
-#SBATCH --array=0-449
+#SBATCH --array=34-449
 #SBATCH --output=logs_verification/MNIST_%a.out
 
 module load StdEnv/2023
