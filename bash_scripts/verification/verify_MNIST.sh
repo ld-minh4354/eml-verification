@@ -22,3 +22,4 @@ for (( X=0; X<20; X++ )); do
         timeout 5m srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
         --config $HOME/eml-verification/properties/current_${SLURM_ARRAY_TASK_ID}.yaml
     } &> "$LOGFILE"
+done
