@@ -1,15 +1,15 @@
 import os, sys
 import textwrap
 import itertools
-
-import pandas as pd
+import argparse
 
 
 
 class GeneratePropertyScripts:
-    def __init__(self, epsilon=0.001):
+    def __init__(self, epsilon=0.01, job_index = 0):
         self.add_project_folder_to_pythonpath()
         self.epsilon = str(epsilon)
+        self.job_index = job_index
 
         self.model_types = ["baseline",
                             "prune_0.2", "prune_0.4", "prune_0.6", "prune_0.7",
@@ -44,7 +44,15 @@ class GeneratePropertyScripts:
         seed_index = (index % 1000) // 100
         property_index = index % 100
 
-        
+        model = self.model_types[model_index]
+        seed = self.seed_values[seed_index]
+        property = self.property_values[property_index]
+
+        file_content = self.get_file_content(model, seed, property)
+
+        file_path = os.path.join("properties", f"current_{self.job_index}.yaml")
+        with open(file_path, "w") as f:
+            f.write(file_content)
 
 
     def get_file_content(self, model, seed, property):
@@ -66,5 +74,10 @@ class GeneratePropertyScripts:
 
 
 if __name__ == "__main__":
-    gps = GeneratePropertyScripts()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--epsilon", type=float, default=0.01, help="Epsilon in verification")
+    parser.add_argument("--job", type=int, default=0, help="Job array")
+    args = parser.parse_args()
+
+    gps = GeneratePropertyScripts(epsilon=args.epsilon, job_index=args.job)
     gps.main()
