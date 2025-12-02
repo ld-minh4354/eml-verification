@@ -27,4 +27,4 @@ seed=${SEED_VALUES[$seed_index]}
 
 echo "Prune model for CIFAR10 with seed=$seed, prune ratio=$prune %"
 
-srun python code/ml_model/prune_CIFAR10.py --seed $seed --prune $prune
+srun python code/ml_training/prune_CIFAR10.py --seed $seed --prune $prune

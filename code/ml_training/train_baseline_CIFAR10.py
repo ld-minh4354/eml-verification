@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 
-from resnet18_CIFAR10 import BasicBlock, ResNet
+from code.ml_model.resnet18_CIFAR10 import BasicBlock, ResNet
 
 
 

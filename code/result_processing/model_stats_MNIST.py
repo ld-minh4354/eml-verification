@@ -7,6 +7,8 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms, models
 
+from code.ml_model.resnet4_MNIST import ResNet4
+
 
 
 class ModelStatsMNIST:
@@ -64,10 +66,7 @@ class ModelStatsMNIST:
 
 
     def load_model(self, model_type, seed):
-        model = models.resnet18()
-        model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        model.maxpool = nn.Identity()
-        model.fc = nn.Linear(512, self.num_classes)
+        model = ResNet4()
         model = model.to(self.device)
 
         state_dict = torch.load(os.path.join("models", "MNIST", model_type, f"resnet18-MNIST-{seed}.pth"), 

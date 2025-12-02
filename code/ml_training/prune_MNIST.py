@@ -9,6 +9,8 @@ import torch.nn as nn
 from torch.nn.utils import prune
 from torchvision import datasets, transforms, models
 
+from code.ml_model.resnet4_MNIST import ResNet4
+
 
 
 class PruneMNIST:
@@ -78,14 +80,10 @@ class PruneMNIST:
 
     
     def load_model(self):
-        self.model = models.resnet18()
-        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        self.model.maxpool = nn.Identity()
-        self.model.avgpool = nn.AvgPool2d(kernel_size=4)
-        self.model.fc = nn.Linear(512, self.num_classes)
+        self.model = ResNet4()
         self.model = self.model.to(self.device)
 
-        state_dict = torch.load(os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.pth"), 
+        state_dict = torch.load(os.path.join("models", "MNIST", "baseline", f"resnet4-MNIST-{self.seed}.pth"), 
                                 map_location=self.device)
         self.model.load_state_dict(state_dict)
 
@@ -117,7 +115,7 @@ class PruneMNIST:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Pruning ResNet18 for MNIST under seed {self.seed}\n")
+        print(f"Pruning ResNet4 for MNIST under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             test_accuracy = self.train_loop(epoch)
@@ -132,10 +130,10 @@ class PruneMNIST:
 
     def save_model(self):
         os.makedirs(os.path.join("models", "MNIST", f"prune_{self.prune_rate}"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet18-MNIST-{self.seed}.pth"))
+        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet4-MNIST-{self.seed}.pth"))
 
         x = torch.randn(1, 1, 28, 28).to(self.device)
-        torch.onnx.export(self.model, x, os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet18-MNIST-{self.seed}.onnx"),
+        torch.onnx.export(self.model, x, os.path.join("models", "MNIST", f"prune_{self.prune_rate}", f"resnet4-MNIST-{self.seed}.onnx"),
                           export_params=True, external_data=False,
                           input_names=['input'], output_names=['output'],
                           dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}})

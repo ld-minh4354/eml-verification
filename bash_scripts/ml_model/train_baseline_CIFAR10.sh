@@ -19,4 +19,4 @@ SEED=$(( SLURM_ARRAY_TASK_ID * 10 ))
 
 echo "Train baseline model for CIFAR10 with seed=$SEED"
 
-srun python code/ml_model/train_baseline_CIFAR10.py --seed $SEED
+srun python code/ml_training/train_baseline_CIFAR10.py --seed $SEED
