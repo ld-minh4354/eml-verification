@@ -69,7 +69,7 @@ class ModelStatsMNIST:
         model = ResNet4()
         model = model.to(self.device)
 
-        state_dict = torch.load(os.path.join("models", "MNIST", model_type, f"resnet18-MNIST-{seed}.pth"), 
+        state_dict = torch.load(os.path.join("models", "MNIST", model_type, f"resnet4-MNIST-{seed}.pth"), 
                                 map_location=self.device)
         model.load_state_dict(state_dict)
 

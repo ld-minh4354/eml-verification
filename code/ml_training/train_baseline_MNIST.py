@@ -100,7 +100,7 @@ class TrainBaselineMNIST:
         torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "baseline", f"resnet4-MNIST-{self.seed}.pth"))
 
         # x = torch.randn(1, 1, 28, 28).to(self.device)
-        # torch.onnx.export(self.model, x, os.path.join("models", "MNIST", "baseline", f"resnet18-MNIST-{self.seed}.onnx"),
+        # torch.onnx.export(self.model, x, os.path.join("models", "MNIST", "baseline", f"resnet4-MNIST-{self.seed}.onnx"),
         #                   export_params=True, external_data=False,
         #                   input_names=['input'], output_names=['output'],
         #                   dynamic_axes={'input' : {0 : 'batch_size'}, 'output' : {0 : 'batch_size'}})
