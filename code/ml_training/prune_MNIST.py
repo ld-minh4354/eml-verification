@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn.utils import prune
-from torchvision import datasets, transforms, models
+from torchvision import datasets, transforms
 
 from code.ml_model.resnet4_MNIST import ResNet4
 
