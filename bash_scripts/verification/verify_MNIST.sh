@@ -5,7 +5,7 @@
 #SBATCH --mem=61G
 #SBATCH --time=2:00:00
 #SBATCH --array=0-449
-#SBATCH --output=logs_verification/MNIST_%a.out
+#SBATCH --output=logs/MNIST_%A_%a.out
 
 module load StdEnv/2023
 module load python/3.11
@@ -13,13 +13,15 @@ source $HOME/eml-verification/.venv_abc/bin/activate
 
 export OMP_NUM_THREADS=1
 
+EPSILON=0.006
+
 for (( X=0; X<20; X++ )); do
     ID=$((SLURM_ARRAY_TASK_ID * 20 + X))
-    LOGFILE="logs_verification/MNIST_${ID}.out"
+    LOGFILE="logs_verification/MNIST_${EPSILON}_${ID}.out"
 
     {
         srun python code/property_gen/generate_property_script.py \
-        --epsilon 0.004 --index $ID --job $SLURM_ARRAY_TASK_ID
+        --epsilon $EPSILON --index $ID --job $SLURM_ARRAY_TASK_ID
 
         timeout 5m srun python $HOME/eml-verification/alpha-beta-CROWN/complete_verifier/abcrown.py \
         --config $HOME/eml-verification/properties/current_${SLURM_ARRAY_TASK_ID}.yaml
