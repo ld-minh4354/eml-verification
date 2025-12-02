@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=verify_MNIST
-#SBATCH --gpus-per-node=h100:1
+#SBATCH --gpus=nvidia_h100_80gb_hbm3_2g.20gb:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=61G
 #SBATCH --time=2:00:00
-#SBATCH --array=34-449
+#SBATCH --array=0-449
 #SBATCH --output=logs_verification/MNIST_%a.out
 
 module load StdEnv/2023
