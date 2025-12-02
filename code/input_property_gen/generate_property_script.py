@@ -6,9 +6,16 @@ import pandas as pd
 
 
 class GeneratePropertyScripts:
-    def __init__(self, dataset = "CIFAR10"):
+    def __init__(self, dataset = "MNIST", epsilon=0.001):
         self.add_project_folder_to_pythonpath()
         self.dataset = dataset
+        self.epsilon = epsilon
+
+        self.model_types = ["baseline",
+                            "prune_0.2", "prune_0.4", "prune_0.6", "prune_0.7",
+                            "prune_0.75", "prune_0.8", "prune_0.85", "prune_0.9"]
+        
+        self.seed_values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 
     def add_project_folder_to_pythonpath(self):
@@ -18,15 +25,6 @@ class GeneratePropertyScripts:
 
 
     def main(self):
-        self.get_labels()
-        self.generate_scripts()
-
-
-    def get_labels(self):
-        self.df_labels = pd.read_csv(os.path.join("test_data", self.dataset, "labels.csv"))
-
-
-    def generate_scripts(self):
         os.makedirs(os.path.join("properties", self.dataset), exist_ok=True)
 
         for _, row in self.df_labels.iterrows():
