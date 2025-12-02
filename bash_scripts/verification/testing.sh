@@ -15,7 +15,7 @@ export OMP_NUM_THREADS=1
 
 for (( X=0; X<20; X++ )); do
     ID=$((SLURM_ARRAY_TASK_ID * 20 + X))
-    LOGFILE="logs_verification/MNIST_${ID}.out"
+    LOGFILE="logs/abc_testing_result_${ID}.out"
 
     {
         srun python code/property_gen/generate_property_script.py \
