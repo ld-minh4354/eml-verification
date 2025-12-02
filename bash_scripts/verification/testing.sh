@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=61G
-#SBATCH --time=0:20:00
+#SBATCH --time=1:00:00
 #SBATCH --output=logs/abc_testing.out
 
 module load StdEnv/2023
