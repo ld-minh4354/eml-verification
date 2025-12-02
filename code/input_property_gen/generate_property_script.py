@@ -16,6 +16,8 @@ class GeneratePropertyScripts:
                             "prune_0.75", "prune_0.8", "prune_0.85", "prune_0.9"]
         self.seed_values = list(range(10, 101, 10))
         self.property_values = list(range(100))
+        
+        os.makedirs(os.path.join("properties", "MNIST", self.epsilon), exist_ok=True)
 
 
     def add_project_folder_to_pythonpath(self):
@@ -25,7 +27,6 @@ class GeneratePropertyScripts:
 
 
     def main(self):
-        os.makedirs(os.path.join("properties", "MNIST", self.epsilon), exist_ok=True)
         index = 0
 
         for model, seed, property in itertools.product(self.model_types, self.seed_values, self.property_values):
@@ -36,6 +37,14 @@ class GeneratePropertyScripts:
                 f.write(file_content)
 
             index += 1
+
+
+    def generate(self, index):
+        model_index = index // 1000
+        seed_index = (index % 1000) // 100
+        property_index = index % 100
+
+        
 
 
     def get_file_content(self, model, seed, property):
