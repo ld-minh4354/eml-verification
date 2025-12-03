@@ -5,7 +5,7 @@
 #SBATCH --mem=61G
 #SBATCH --time=2:00:00
 #SBATCH --array=0-449
-#SBATCH --output=logs/MNIST_%A_%a.out
+#SBATCH --output=logs/MNIST_0.006_%a.out
 
 module load StdEnv/2023
 module load python/3.11
