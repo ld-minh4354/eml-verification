@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=verify_MNIST
+#SBATCH --job-name=verify_MNIST_0.006
 #SBATCH --gpus=nvidia_h100_80gb_hbm3_2g.20gb:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=61G
