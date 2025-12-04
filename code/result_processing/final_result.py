@@ -97,7 +97,8 @@ class FinalResult:
         self.df = (
             self.df
             .groupby(["dataset", "model_type", "epsilon"], as_index=False)
-            .agg(result=("result", "sum"))
+            .agg(result=("result", "sum"),
+                 std=("result", "std"))
         )
 
         self.df = self.df.sort_values(["dataset", "epsilon", "model_type"])
