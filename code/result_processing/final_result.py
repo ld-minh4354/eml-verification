@@ -90,7 +90,7 @@ class FinalResult:
             .agg(result=("result", "sum"))
         )
 
-        self.df = self.df.sort_values(["dataset", "model_type", "seed", "epsilon"])
+        self.df = self.df.sort_values(["dataset", "epsilon", "model_type", "seed"])
 
 
     def group_by_model(self):
@@ -100,7 +100,7 @@ class FinalResult:
             .agg(result=("result", "sum"))
         )
 
-        self.df = self.df.sort_values(["dataset", "model_type", "epsilon", "result"])
+        self.df = self.df.sort_values(["dataset", "epsilon", "model_type"])
 
 
     def regex_helper(self, file_name, content, header):
