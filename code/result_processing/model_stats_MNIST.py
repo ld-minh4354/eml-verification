@@ -32,9 +32,20 @@ class ModelStatsMNIST:
     def main(self):
         self.load_data()
         self.process_models()
+        self.process_data()
 
+    
+    def process_data(self):
         os.makedirs("results", exist_ok=True)
-        self.df.to_csv(os.path.join("results", "model_stats_MNIST.csv"), index=False)
+        self.df.to_csv(os.path.join("results", "model_stats_MNIST_all.csv"), index=False)
+
+        self.df = (
+            self.df
+            .groupby(["model_type"], as_index=False)
+            .agg(accuracy_avg=("accuracy", "sum"),
+                 accuracy_std=("accuracy", "std"))
+        )
+        self.df.to_csv(os.path.join("results", "model_stats_MNIST_summary.csv"), index=False)
 
 
     def load_data(self):
