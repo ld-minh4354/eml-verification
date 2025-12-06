@@ -42,7 +42,7 @@ class ModelStatsMNIST:
         self.df = (
             self.df
             .groupby(["model_type"], as_index=False)
-            .agg(accuracy_avg=("accuracy", "avg"),
+            .agg(accuracy_avg=("accuracy", "mean"),
                  accuracy_std=("accuracy", "std"))
         )
         self.df.to_csv(os.path.join("results", "model_stats_MNIST_summary.csv"), index=False)
