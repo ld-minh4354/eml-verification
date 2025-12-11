@@ -11,8 +11,8 @@ class GeneratePropertyScripts:
         self.job_index = job_index
 
         self.model_types = ["baseline",
-                            "prune_0.2", "prune_0.4", "prune_0.6", "prune_0.7",
-                            "prune_0.75", "prune_0.8", "prune_0.85", "prune_0.9"]
+                            "prune_0.1", "prune_0.2", "prune_0.3", "prune_0.4",
+                            "prune_0.5", "prune_0.6", "prune_0.7", "prune_0.8"]
         self.seed_values = list(range(10, 101, 10))
         self.property_values = list(range(100))
         
