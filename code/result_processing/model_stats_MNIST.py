@@ -16,8 +16,8 @@ class ModelStatsMNIST:
         self.add_project_folder_to_pythonpath()
         self.device = torch.device("cuda")
 
-        self.model_type = ["baseline", "prune_0.2", "prune_0.4", "prune_0.6", "prune_0.7",
-                           "prune_0.75", "prune_0.8", "prune_0.85", "prune_0.9"]
+        self.model_type = ["baseline", "prune_0.1", "prune_0.2", "prune_0.3", "prune_0.4",
+                           "prune_0.5", "prune_0.6", "prune_0.7", "prune_0.8"]
         self.seed = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
         self.df = pd.DataFrame(columns=["model_type", "seed", "accuracy", "zero_weight_percentage"])
