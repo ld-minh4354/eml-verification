@@ -3,7 +3,7 @@
 #SBATCH --gpus=nvidia_h100_80gb_hbm3_2g.20gb:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=61G
-#SBATCH --time=2:00:00
+#SBATCH --time=3:00:00
 #SBATCH --array=0-449
 #SBATCH --output=logs/MNIST_0.009_%a.out
 
