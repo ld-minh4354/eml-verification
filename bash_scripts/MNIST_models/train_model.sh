@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=MNIST_train_baseline_model
+#SBATCH --job-name=MNIST_train_model
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:20:00
 #SBATCH --array=0-9
-#SBATCH --output=logs_training/MNIST_train_baseline_model_%a.out
+#SBATCH --output=logs_training/MNIST_train_model_%a.out
 
 module load StdEnv/2023
 module load python/3.11
@@ -15,12 +15,10 @@ pip install --no-index --upgrade pip
 
 pip install --no-index -r $HOME/requirements_main.txt
 
-SEED_VALUES=(10 20 30 40 50 60 70 80 90 100)
-
 TASK_ID=${SLURM_ARRAY_TASK_ID}
 
-SEED=${SEED_VALUES[$((TASK_ID))]}
+SEED=$((TASK_ID * 5))
 
-echo "Train MNIST baseline model with seed=$SEED"
+echo "Train MNIST model with seed=$SEED"
 
-srun python code/MNIST/train_baseline_model.py --seed $SEED
+srun python code/MNIST/train_model.py --seed $SEED

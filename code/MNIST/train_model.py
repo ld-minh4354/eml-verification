@@ -6,22 +6,19 @@ import numpy as np
 
 import torch
 import torch.nn as nn
-from torch.nn.utils import prune
 from torchvision import datasets, transforms
 
 from model_architecture import ResNet4
+    
 
 
-
-class PruneMNIST:
-    def __init__(self, seed, prune_rate):
+class TrainModelMNIST:
+    def __init__(self, seed):
         self.add_project_folder_to_pythonpath()
         self.device = torch.device("cuda")
 
         self.seed = seed
         self.set_seed(seed)
-
-        self.prune_rate = prune_rate
 
 
     def add_project_folder_to_pythonpath(self):
@@ -41,22 +38,9 @@ class PruneMNIST:
 
     def main(self):
         self.load_data()
-        self.load_model()
         self.set_hyperparameters()
         self.training()
         self.save_model()
-
-
-    def count_zero_weights(self):
-        nonzero = 0
-        total = 0
-        for _, param in self.model.named_parameters():
-            tensor = param.data
-            nz = torch.count_nonzero(tensor)
-            nonzero += nz
-            total += tensor.numel()
-
-        print(f"Non-zero weights: {nonzero}/{total}")
 
 
     def load_data(self):
@@ -80,61 +64,34 @@ class PruneMNIST:
         self.train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
         self.test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-    
-    def load_model(self):
-        self.model = ResNet4()
-        self.model = self.model.to(self.device)
-        
-        state_dict = torch.load(os.path.join("models", "MNIST", "baseline",
-                                             f"MNIST_baseline_{self.seed}.pth"), 
-                                map_location=self.device)
-        self.model.load_state_dict(state_dict)
-
-        self.count_zero_weights()
-
-        self.parameters_to_prune = []
-        for _, module in self.model.named_modules():
-            if isinstance(module, nn.Conv2d):
-                self.parameters_to_prune.append((module, 'weight'))
-
-        prune.global_unstructured(
-            self.parameters_to_prune,
-            pruning_method=prune.L1Unstructured,
-            amount=self.prune_rate,
-        )
-
 
     def set_hyperparameters(self):
-        self.EPOCH = 100
+        self.EPOCH = 50
         self.LR = 1e-3
         self.WEIGHT_DECAY = 1e-4
-        self.STEP_SIZE = 30
-        self.GAMMA = 0.1
+        self.STEP_SIZE = 10
+        self.GAMMA = 0.5
 
 
     def training(self):
+        self.model = ResNet4()
+        self.model = self.model.to(self.device)
+
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=self.STEP_SIZE, gamma=self.GAMMA)
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Pruning MNIST model with seed {self.seed} under pruning ratio {self.prune_rate}\n")
+        print(f"Start training baseline MNIST under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
-            test_accuracy = self.train_loop(epoch)
-            if test_accuracy >= 0.994:
-                break
+            self.train_loop(epoch)
 
-        for module, _ in self.parameters_to_prune:
-            prune.remove(module, 'weight')
-
-        self.count_zero_weights()
-
-
+        
     def save_model(self):
-        os.makedirs(os.path.join("models", "MNIST", f"prune{self.prune_rate}"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", f"prune{self.prune_rate}",
-                                                         f"MNIST_prune{self.prune_rate}_{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "MNIST", "baseline"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "different_seed",
+                                                         f"MNIST_baseline_{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
@@ -158,8 +115,6 @@ class PruneMNIST:
 
         self.scheduler.step()
         print(f"Epoch [{epoch+1:3d}] | Train Loss: {total_loss:.4f} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_accuracy:.4f}")
-
-        return test_accuracy
     
 
     def test_loop(self):
@@ -188,8 +143,7 @@ class PruneMNIST:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int)
-    parser.add_argument("--prune", type=int)
     args = parser.parse_args()
 
-    pruning = PruneMNIST(seed=args.seed, prune_rate=args.prune / 100)
-    pruning.main()
+    training = TrainModelMNIST(seed=args.seed)
+    training.main()
