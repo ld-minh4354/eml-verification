@@ -12,7 +12,7 @@ from model_architecture import ResNet4
     
 
 
-class TrainBaselineJPL:
+class TrainModelJPL:
     def __init__(self, seed):
         self.add_project_folder_to_pythonpath()
         self.device = torch.device("cuda")
@@ -73,8 +73,8 @@ class TrainBaselineJPL:
         self.EPOCH = 100
         self.LR = 1e-4
         self.WEIGHT_DECAY = 1e-4
-        self.STEP_SIZE = 30
-        self.GAMMA = 0.3
+        self.STEP_SIZE = 10
+        self.GAMMA = 0.5
 
 
     def training(self):
@@ -86,18 +86,16 @@ class TrainBaselineJPL:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training baseline JPL under seed {self.seed}\n")
+        print(f"Start training JPL model under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
-            test_accuracy = self.train_loop(epoch)
-            if test_accuracy >= 0.84:
-                break
+            self.train_loop(epoch)
 
         
     def save_model(self):
-        os.makedirs(os.path.join("models", "JPL", "baseline"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "JPL", "baseline",
-                                                         f"JPL_baseline_{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "JPL", "different_seed"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "JPL", "different_seed",
+                                                         f"JPL_{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
@@ -121,8 +119,6 @@ class TrainBaselineJPL:
 
         self.scheduler.step()
         print(f"Epoch [{epoch+1:3d}] | Train Loss: {total_loss:.4f} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_accuracy:.4f}", flush=True)
-
-        return test_accuracy
     
 
     def test_loop(self):
@@ -153,5 +149,5 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int)
     args = parser.parse_args()
 
-    training = TrainBaselineJPL(seed=args.seed)
+    training = TrainModelJPL(seed=args.seed)
     training.main()

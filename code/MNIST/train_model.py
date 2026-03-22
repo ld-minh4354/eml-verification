@@ -82,16 +82,16 @@ class TrainModelMNIST:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training baseline MNIST under seed {self.seed}\n")
+        print(f"Start training MNIST model under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             self.train_loop(epoch)
 
         
     def save_model(self):
-        os.makedirs(os.path.join("models", "MNIST", "baseline"), exist_ok=True)
+        os.makedirs(os.path.join("models", "MNIST", "different_seed"), exist_ok=True)
         torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "different_seed",
-                                                         f"MNIST_baseline_{self.seed}.pth"))
+                                                         f"MNIST_{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
