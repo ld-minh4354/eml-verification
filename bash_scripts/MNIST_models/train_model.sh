@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:20:00
-#SBATCH --array=0-9
+#SBATCH --array=0-49
 #SBATCH --output=logs_training/MNIST_train_model_%a.out
 
 module load StdEnv/2023
