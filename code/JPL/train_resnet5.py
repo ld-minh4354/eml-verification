@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-from model_defs import CResNet5
+from model_defs import BasicBlock, CResNet5
     
 
 
@@ -78,7 +78,7 @@ class TrainResnet4JPL:
 
 
     def training(self):
-        self.model = CResNet5(num_classes=2)
+        self.model = CResNet5(BasicBlock, num_blocks=2, num_classes=2, in_planes=8, bn=False, last_layer="dense")
         self.model = self.model.to(self.device)
 
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)
