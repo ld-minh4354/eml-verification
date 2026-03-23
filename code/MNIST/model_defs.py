@@ -79,7 +79,7 @@ class CResNet5(nn.Module):
                                stride=2, padding=1, bias=not self.bn)
         if self.bn:
             self.bn1 = nn.BatchNorm2d(in_planes)
-        self.layer1 = self._make_layer(block, in_planes*2, num_blocks, stride=2, bn=bn, kernel=3)
+        self.layer1 = self._make_layer(block, in_planes*2, num_blocks, stride=2, bn=bn, kernel=1)
         if self.last_layer == "avg":
             self.avg2d = nn.AvgPool2d(4)
             self.linear = nn.Linear(in_planes * 8 * block.expansion, num_classes)
