@@ -2,7 +2,7 @@
 #SBATCH --job-name=verify_MNIST_0.006
 #SBATCH --gpus=nvidia_h100_80gb_hbm3_2g.20gb:1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=61G
+#SBATCH --mem=128G
 #SBATCH --time=3:00:00
 #SBATCH --array=0-449
 #SBATCH --output=logs/verify_MNIST_0.006_%a.out
