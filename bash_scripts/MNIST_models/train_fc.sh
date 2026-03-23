@@ -3,7 +3,7 @@
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=00:30:00
+#SBATCH --time=00:10:00
 #SBATCH --array=0-49
 #SBATCH --output=logs_training/MNIST_train_fc_%a.out
 
