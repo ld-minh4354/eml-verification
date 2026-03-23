@@ -8,11 +8,11 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-from model_defs import BasicBlock, CResNet5
+from model_defs import mnist_fc_3_512
     
 
 
-class TrainResnet5MNIST:
+class TrainFCMNIST:
     def __init__(self, seed):
         self.add_project_folder_to_pythonpath()
         self.device = torch.device("cuda")
@@ -74,7 +74,7 @@ class TrainResnet5MNIST:
 
 
     def training(self):
-        self.model = CResNet5(BasicBlock, num_blocks=2, in_planes=8, bn=False, last_layer="dense")
+        self.model = mnist_fc_3_512()
         self.model = self.model.to(self.device)
 
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.LR, weight_decay=self.WEIGHT_DECAY)
@@ -82,16 +82,16 @@ class TrainResnet5MNIST:
 
         self.criterion = nn.CrossEntropyLoss()
 
-        print(f"Start training MNIST ResNet5 model under seed {self.seed}\n")
+        print(f"Start training MNIST FC model under seed {self.seed}\n")
 
         for epoch in range(self.EPOCH):
             self.train_loop(epoch)
 
         
     def save_model(self):
-        os.makedirs(os.path.join("models", "MNIST", "resnet5"), exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "resnet5",
-                                                         f"MNIST_resnet5_{self.seed}.pth"))
+        os.makedirs(os.path.join("models", "MNIST", "FC"), exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join("models", "MNIST", "FC",
+                                                         f"MNIST_FC_{self.seed}.pth"))
 
 
     def train_loop(self, epoch):
@@ -145,5 +145,5 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int)
     args = parser.parse_args()
 
-    training = TrainResnet5MNIST(seed=args.seed)
+    training = TrainFCMNIST(seed=args.seed)
     training.main()
