@@ -10,10 +10,8 @@ class GeneratePropertyMNIST:
         self.epsilon = str(epsilon)
         self.job_index = job_index
 
-        self.prune_types = ["baseline",
-                            "prune0.1", "prune0.2", "prune0.3", "prune0.4",
-                            "prune0.5", "prune0.6", "prune0.7", "prune0.8"]
-        self.seed_values = list(range(10, 101, 10))
+        self.model_types = ["FC", "conv"]
+        self.seed_values = list(range(0, 250, 10))
         self.property_values = list(range(100))
         
         os.makedirs(os.path.join("properties"), exist_ok=True)
@@ -26,36 +24,39 @@ class GeneratePropertyMNIST:
 
 
     def generate(self, index):
-        prune_index = index // 1000
-        seed_index = (index % 1000) // 100
-        property_index = index % 100
+        num_seeds = len(self.seed_values)
+        num_props = len(self.property_values)
 
-        prune = self.prune_types[prune_index]
+        model_index = index // (num_seeds * num_props)
+        seed_index = (index % (num_seeds * num_props)) // num_props
+        property_index = index % num_props
+
+        model = self.model_types[model_index]
         seed = self.seed_values[seed_index]
         property = self.property_values[property_index]
 
-        self.print_info(prune, seed, property)
-        file_content = self.get_file_content(prune, seed, property)
+        self.print_info(model, seed, property)
+        file_content = self.get_file_content(model, seed, property)
 
         file_path = os.path.join("properties", f"MNIST_{self.epsilon}_{self.job_index}.yaml")
         with open(file_path, "w") as f:
             f.write(file_content)
 
 
-    def print_info(self, prune, seed, property):
+    def print_info(self, model, seed, property):
         print(f"DATASET: MNIST")
-        print(f"PRUNING: {prune}")
+        print(f"MODEL TYPE: {model}")
         print(f"SEED: {seed}")
         print(f"PROPERTY: {property}")
         print(f"VERIFIER: abc")
         print(f"EPSILON: {self.epsilon}")
 
 
-    def get_file_content(self, prune, seed, property):
+    def get_file_content(self, model, seed, property):
         return textwrap.dedent(f"""\
             model:
                 name: resnet4
-                path: models/MNIST/{prune}/MNIST_{prune}_{seed}.pth
+                path: models/MNIST/{model}/MNIST_{model}_{seed}.pth
             data:
                 dataset: MNIST
                 mean: [0.1307]
