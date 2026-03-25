@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=MNIST_train_fc
-#SBATCH --gpus-per-node=h100:1
+#SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
 #SBATCH --time=00:10:00
