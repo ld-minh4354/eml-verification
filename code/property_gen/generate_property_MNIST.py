@@ -53,9 +53,13 @@ class GeneratePropertyMNIST:
 
 
     def get_file_content(self, model, seed, property):
+        if model == "FC":
+            model_name = "mnist_fc_3_512"
+        elif model == "conv":
+            model_name = "mnist_conv_big"
         return textwrap.dedent(f"""\
             model:
-                name: resnet4
+                name: {model_name}
                 path: models/MNIST/{model}/MNIST_{model}_{seed}.pth
             data:
                 dataset: MNIST
