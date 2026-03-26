@@ -11,7 +11,7 @@ class GeneratePropertyMNIST:
         self.job_index = job_index
 
         self.model_types = ["FC", "conv"]
-        self.seed_values = list(range(0, 250, 10))
+        self.seed_values = list(range(0, 250, 5))
         self.property_values = list(range(100))
         
         os.makedirs(os.path.join("properties"), exist_ok=True)
