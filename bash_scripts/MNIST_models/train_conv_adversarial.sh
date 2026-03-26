@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=JPL_train_resnet5
-#SBATCH --gpus-per-node=h100:1
+#SBATCH --job-name=MNIST_train_conv_adversarial
+#SBATCH --gpus-per-node=a100:1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3G
-#SBATCH --time=01:00:00
+#SBATCH --time=00:10:00
 #SBATCH --array=0-49
-#SBATCH --output=logs_training/JPL_train_resnet5_%a.out
+#SBATCH --output=logs_training/MNIST_train_conv_adversarial_%a.out
 
 module load StdEnv/2023
 module load python/3.11
@@ -19,6 +19,6 @@ TASK_ID=${SLURM_ARRAY_TASK_ID}
 
 SEED=$((TASK_ID * 5))
 
-echo "Train JPL ResNet5 model with seed=$SEED"
+echo "Train MNIST Conv Adversarial model with seed=$SEED"
 
-srun python code/JPL/train_resnet5.py --seed $SEED
+srun python code/MNIST/train_conv_adversarial.py --seed $SEED
