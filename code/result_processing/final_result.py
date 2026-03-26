@@ -10,7 +10,7 @@ class FinalResult:
         self.add_project_folder_to_pythonpath()
         self.folder = os.path.join("logs_verification")
         self.df = pd.DataFrame(columns=["file_name",
-                                        "dataset", "pruning", "seed",
+                                        "dataset", "model_type", "seed",
                                         "epsilon", "verifier", "property",
                                         "result"])
 
@@ -54,7 +54,7 @@ class FinalResult:
 
     def process_file(self, file_name, content):
         dataset = self.regex_helper(file_name, content, "DATASET")
-        pruning = self.regex_helper(file_name, content, "PRUNING")
+        model_type = self.regex_helper(file_name, content, "MODEL TYPE")
         seed = self.regex_helper(file_name, content, "SEED")
         prop = self.regex_helper(file_name, content, "PROPERTY")
         verifier = self.regex_helper(file_name, content, "VERIFIER")
@@ -68,7 +68,7 @@ class FinalResult:
         return {
             "file_name": file_name,
             "dataset": dataset,
-            "pruning": pruning,
+            "model_type": model_type,
             "seed": seed,
             "epsilon": epsilon,
             "verifier": verifier,
@@ -80,28 +80,28 @@ class FinalResult:
     def group_by_model_and_seed(self):
         self.df = (
             self.df
-            .groupby(["dataset", "pruning", "seed", "epsilon", "property"], as_index=False)
+            .groupby(["dataset", "model_type", "seed", "epsilon", "property"], as_index=False)
             .agg(result=("result", "max"))
         )
 
         self.df = (
             self.df
-            .groupby(["dataset", "pruning", "seed", "epsilon"], as_index=False)
+            .groupby(["dataset", "model_type", "seed", "epsilon"], as_index=False)
             .agg(result=("result", "sum"))
         )
 
-        self.df = self.df.sort_values(["dataset", "epsilon", "pruning", "seed"])
+        self.df = self.df.sort_values(["dataset", "epsilon", "model_type", "seed"])
 
 
     def group_by_model(self):
         self.df = (
             self.df
-            .groupby(["dataset", "pruning", "epsilon"], as_index=False)
+            .groupby(["dataset", "model_type", "epsilon"], as_index=False)
             .agg(result=("result", "mean"),
                  std=("result", "std"))
         )
 
-        self.df = self.df.sort_values(["dataset", "epsilon", "pruning"])
+        self.df = self.df.sort_values(["dataset", "epsilon", "model_type"])
 
 
     def regex_helper(self, file_name, content, header):
